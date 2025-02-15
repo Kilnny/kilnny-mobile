@@ -14,7 +14,7 @@ import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export const unstable_settings = {
-  initialRouteName: "(tabs)",
+  initialRouteName: "welcome",
 };
 
 SplashScreen.preventAutoHideAsync();
@@ -49,8 +49,8 @@ function RootLayoutNav() {
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack>
       </ThemeProvider>
     </SafeAreaProvider>

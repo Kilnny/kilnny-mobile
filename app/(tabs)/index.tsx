@@ -1,50 +1,75 @@
-import { useState } from "react";
-import { FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, RefreshControl } from "react-native";
 import AppCard from "@/components/AppCard";
 import { MyView, MyText } from "@/components/Themed";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome } from "@expo/vector-icons";
+import { View } from "react-native";
+import { useColorScheme } from "@/components/useColorScheme";
+import Colors from "@/constants/Colors";
+import SkeletonCard from "@/components/SkeletonCard";
 
 const initialApps = [
   {
     id: 1,
     name: "App One",
+    version: "1.0.0",
     description: "Description for App One",
-    action: "Install",
     picture:
-      "https://th.bing.com/th/id/R.cd17dba8ec1b9b59a2bdfb924eef622f?rik=9NrY7Ca%2bi1gICA&riu=http%3a%2f%2fclipartmag.com%2fimages%2fno-copyright-logos-31.jpg&ehk=jb4XKsTZYme8ksllpfUq%2fUFElwzibCk10wR0DKd7M5o%3d&risl=&pid=ImgRaw&r=0",
-    hasUpdate: true,
+      "https://cdn.pixabay.com/photo/2015/09/10/21/53/fractal-935011_640.jpg",
+    state: "hasUpdate",
+    developer: "Developer One",
+    releaseDate: "2021-01-01",
+    size: "10MB",
+    whatToTest: "Test One, Test Two, Test Three",
   },
   {
     id: 2,
     name: "App Two",
+    version: "1.0.0",
     description: "Description for App Two",
-    action: "Install",
     picture:
-      "https://th.bing.com/th/id/OIP.TtZA6oudINHralYnRgtwxQHaHp?rs=1&pid=ImgDetMain",
-    hasUpdate: false,
+      "https://cdn.pixabay.com/photo/2012/03/02/12/41/fractal-21236_640.jpg",
+    state: "noInstalled",
+    developer: "Developer One",
+    releaseDate: "2021-01-01",
+    size: "10MB",
+    whatToTest: "Test One, Test Two, Test Three",
   },
   {
     id: 3,
     name: "App Three",
+    version: "1.0.0",
     description: "Description for App Three",
-    action: "Install",
     picture:
-      "https://th.bing.com/th/id/R.10c220ed1a4717188966b9a2201a81f5?rik=m1flukt2Mgno%2fg&pid=ImgRaw&r=0",
-    hasUpdate: false,
+      "https://cdn.pixabay.com/photo/2019/09/13/19/18/coffee-4474690_640.jpg",
+    state: "noInstalled",
+    developer: "Developer One",
+    releaseDate: "2021-01-01",
+    size: "10MB",
+    whatToTest: "Test One, Test Two, Test Three",
   },
   {
     id: 4,
     name: "App Four",
+    version: "1.0.0",
     description: "Description for App Four",
-    action: "Install",
     picture:
-      "https://th.bing.com/th/id/R.10c220ed1a4717188966b9a2201a81f5?rik=m1flukt2Mgno%2fg&pid=ImgRaw&r=0",
-    hasUpdate: true,
+      "https://cdn.pixabay.com/photo/2015/09/10/21/54/purple-935012_640.jpg",
+    state: "noInstalled",
+    developer: "Developer One",
+    releaseDate: "2021-01-01",
+    size: "10MB",
+    whatToTest: "Test One, Test Two, Test Three",
   },
 ];
 
 export default function TabOneScreen() {
   const [apps, setApps] = useState(initialApps);
+  const colorScheme = useColorScheme();
+  const [refreshing, setRefreshing] = useState(false);
+  const iconColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleButtonClick = (id: number) => {
     setApps((prevApps) =>
@@ -52,41 +77,79 @@ export default function TabOneScreen() {
         app.id === id
           ? {
               ...app,
-              action:
-                app.action === "Install" || app.action === "Update"
-                  ? "Installed"
-                  : app.action,
-              hasUpdate: false,
+              state:
+                app.state === "noInstalled" || app.state === "hasUpdate"
+                  ? "installed"
+                  : app.state,
             }
           : app
       )
     );
   };
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    setIsLoading(true);
+    setTimeout(() => {
+      setApps(initialApps);
+      setRefreshing(false);
+      setIsLoading(false);
+    }, 500);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setApps(initialApps);
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <MyView className="flex-1">
-      <MyText className="text-2xl font-bold m-5">
-        Available Apps for Testing
-      </MyText>
+      <View className="flex-row items-center justify-between m-4">
+        <MyText className="text-xl font-bold">
+          Available Apps for Testing
+        </MyText>
+        <AntDesign name="pluscircleo" size={24} color={iconColor} />
+      </View>
       <FlatList
-        data={apps}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <AppCard
-            picture={item.picture}
-            name={item.name}
-            description={item.description}
-            buttonText={
-              item.action === "Installed" ? (
-                <FontAwesome name="check-circle" size={24} color="green" />
-              ) : (
-                item.action
-              )
-            }
-            onButtonClick={() => handleButtonClick(item.id)}
-            hasUpdate={item.hasUpdate}
-          />
-        )}
+        data={isLoading ? Array(4).fill({}) : apps}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) =>
+          isLoading ? (
+            <SkeletonCard />
+          ) : (
+            <AppCard
+              id={item.id}
+              picture={item.picture}
+              name={item.name}
+              version={item.version}
+              description={item.description}
+              buttonText={
+                item.state === "installed" ? (
+                  <FontAwesome
+                    name="check-circle"
+                    size={24}
+                    color={iconColor}
+                  />
+                ) : item.state === "hasUpdate" ? (
+                  "Update"
+                ) : (
+                  "Install"
+                )
+              }
+              onButtonClick={() => handleButtonClick(item.id)}
+              state={item.state}
+              developer={item.developer}
+              releaseDate={item.releaseDate}
+              size={item.size}
+              whatToTest={item.whatToTest}
+            />
+          )
+        }
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </MyView>
   );
