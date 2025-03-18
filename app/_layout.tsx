@@ -12,9 +12,11 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/components/useColorScheme";
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NavigationProvider } from "@/context/navigation.context";
 
 export const unstable_settings = {
   initialRouteName: "welcome",
+  modals: ["(modals)/feedback", "(modals)/profile"],
 };
 
 SplashScreen.preventAutoHideAsync();
@@ -46,13 +48,18 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="welcome" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <NavigationProvider>
+      <SafeAreaProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <Stack>
+            <Stack.Screen name="welcome" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(modals)" options={{ headerShown: false }} />
+          </Stack>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </NavigationProvider>
   );
 }

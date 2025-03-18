@@ -1,13 +1,17 @@
-import { View, ScrollView, Image, StyleSheet, Dimensions, Text } from "react-native";
-import { useLocalSearchParams, Stack } from "expo-router";
+import {
+  View,
+  ScrollView,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Text,
+} from "react-native";
+import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { MyText, MyView } from "@/components/Themed";
 import { TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
-import BottomSheetModal from "@/components/BottomSheet";
-import Feedback from "@/components/Feedback";
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{
@@ -25,10 +29,10 @@ export default function DetailsScreen() {
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
-  const [isModalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const navigateToFeedback = () => {
+    router.push("/(modals)/feedback");
   };
 
   const renderButton = () => {
@@ -111,9 +115,7 @@ export default function DetailsScreen() {
       </MyView>
 
       <MyView style={styles.section}>
-        <TouchableOpacity 
-        onPress={toggleModal}
-        className="mb-6">
+        <TouchableOpacity onPress={navigateToFeedback} className="mb-6">
           <Text className="text-xl text-[#1dc27d]">Send Feedback</Text>
         </TouchableOpacity>
 
@@ -153,9 +155,6 @@ export default function DetailsScreen() {
           </View>
         </View>
       </MyView>
-      <BottomSheetModal onClose={toggleModal} isVisible={isModalVisible}>
-        <Feedback />
-      </BottomSheetModal>
     </ScrollView>
   );
 }
