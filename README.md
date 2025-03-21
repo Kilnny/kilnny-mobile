@@ -32,7 +32,7 @@ Asegúrate de tener instalados los siguientes programas en tu sistema:
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/testflight-android-client.git
+   git clone https://github.com/Apkfly/apkfly-client.git
    cd testflight-android-client
    ```
 
