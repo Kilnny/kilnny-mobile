@@ -12,6 +12,7 @@ import { TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { useApps } from "@/context/app-state.context";
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{
@@ -27,6 +28,11 @@ export default function DetailsScreen() {
     whatToTest: string;
   }>();
 
+  const { updateAppState, apps } = useApps();
+  
+  const currentApp = apps.find(app => app.id === Number(params.id));
+  const currentState = currentApp?.state || params.state;
+
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const router = useRouter();
@@ -35,15 +41,19 @@ export default function DetailsScreen() {
     router.push("/(modals)/feedback");
   };
 
+  const handleInstallUpdate = () => {
+    updateAppState(Number(params.id));
+  };
+
   const renderButton = () => {
-    if (params.state === "installed") {
-      return <FontAwesome name="check-circle" size={24} color={textColor} />;
-    } else if (params.state === "hasUpdate") {
+    if (currentState === "installed") {
+      return <FontAwesome className="mt-2" name="check-circle" size={24} color={textColor} />;
+    } else if (currentState === "hasUpdate") {
       return (
         <TouchableOpacity
           style={{ backgroundColor: textColor }}
           className="rounded-md px-6 py-2 mt-3"
-          onPress={() => {}}
+          onPress={handleInstallUpdate}
         >
           <MyText
             style={{
@@ -63,7 +73,7 @@ export default function DetailsScreen() {
         <TouchableOpacity
           style={{ backgroundColor: textColor }}
           className="bg-gray-200 rounded-md px-6 py-2 mt-3"
-          onPress={() => {}}
+          onPress={handleInstallUpdate}
         >
           <MyText
             style={{
@@ -114,6 +124,7 @@ export default function DetailsScreen() {
         </View>
       </MyView>
 
+      {/* El resto del componente sigue igual */}
       <MyView style={styles.section}>
         <TouchableOpacity onPress={navigateToFeedback} className="mb-6">
           <Text className="text-xl text-[#1dc27d]">Send Feedback</Text>

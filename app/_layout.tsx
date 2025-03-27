@@ -13,6 +13,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationProvider } from "@/context/navigation.context";
+import { AppsProvider } from "@/context/app-state.context";
 
 export const unstable_settings = {
   initialRouteName: "welcome",
@@ -53,11 +54,13 @@ function RootLayoutNav() {
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <Stack>
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(modals)" options={{ headerShown: false }} />
-          </Stack>
+          <AppsProvider>
+            <Stack>
+              <Stack.Screen name="welcome" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(modals)" options={{ headerShown: false }} />
+            </Stack>
+          </AppsProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </NavigationProvider>

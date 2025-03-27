@@ -11,12 +11,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
     "nativewind-env.d.ts"
   ],
   "typeRoots": [
-      "./node_modules/@types",
-      "./nativewind.d.ts"
-    ],
+    "./node_modules/@types",
+    "./nativewind.d.ts"
+  ]
 }
