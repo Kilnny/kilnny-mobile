@@ -1,47 +1,77 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { Stack, useRouter } from "expo-router";
-import { useColorScheme } from "@/components/useColorScheme";
-import Colors from "@/constants/Colors";
-import { MyText, MyView } from "@/components/Themed";
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { MyText, MyView } from '@/components/Themed';
+import { useColorScheme } from '@/components/useColorScheme';
+import Colors from '@/constants/Colors';
+import { Stack } from 'expo-router';
+import { useAuth } from '@/context/auth.context';
+import { View } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function UserSettingsModal() {
+export default function ProfileModal() {
   const colorScheme = useColorScheme();
-  const router = useRouter();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
+  const bgColor = colorScheme ? Colors[colorScheme].background : Colors.light.background;
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colorScheme === "dark" ? "#000" : "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
       <Stack.Screen
         options={{
-          title: "User Settings",
-          presentation: "modal",
+          title: 'Mi Perfil',
+          presentation: 'modal',
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: colorScheme === "dark" ? "#000" : "#fff",
+            backgroundColor: bgColor,
           },
         }}
       />
+
       <MyView style={styles.container}>
-        <MyText className="text-2xl font-bold mb-4">User Profile</MyText>
-        
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: textColor }]}
-          onPress={() => router.back()}
+        <MyView style={styles.profileHeader}>
+          <View style={[styles.avatar, { backgroundColor: textColor }]}>
+            <MyText 
+              style={[styles.avatarText, { 
+                color: textColor === Colors.light.text ? Colors.dark.text : Colors.light.text 
+              }]}
+            >
+              {user?.name.charAt(0).toUpperCase() || 'U'}
+            </MyText>
+          </View>
+          <MyText style={styles.name}>{user?.name || 'Usuario'}</MyText>
+          <MyText style={styles.email}>{user?.email || 'email@example.com'}</MyText>
+        </MyView>
+
+        <MyView style={styles.section}>
+          <MyText style={styles.sectionTitle}>Configuración</MyText>
+          
+          <TouchableOpacity style={styles.menuItem}>
+            <FontAwesome name="user" size={18} color={textColor} />
+            <MyText style={styles.menuItemText}>Editar Perfil</MyText>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.menuItem}>
+            <FontAwesome name="bell" size={18} color={textColor} />
+            <MyText style={styles.menuItemText}>Notificaciones</MyText>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.menuItem}>
+            <FontAwesome name="lock" size={18} color={textColor} />
+            <MyText style={styles.menuItemText}>Privacidad y Seguridad</MyText>
+          </TouchableOpacity>
+        </MyView>
+
+        <TouchableOpacity 
+          style={[styles.logoutButton, { borderColor: '#ff3b30' }]}
+          onPress={handleLogout}
         >
-          <MyText
-            style={[
-              styles.buttonText,
-              {
-                color:
-                  textColor === Colors.light.text
-                    ? Colors.dark.text
-                    : Colors.light.text,
-              },
-            ]}
-          >
-            Close
-          </MyText>
+          <FontAwesome name="sign-out" size={18} color="#ff3b30" />
+          <MyText style={[styles.logoutText, { color: '#ff3b30' }]}>Cerrar Sesión</MyText>
         </TouchableOpacity>
       </MyView>
     </SafeAreaView>
@@ -53,14 +83,63 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  button: {
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: "center",
-    marginTop: 16,
+  profileHeader: {
+    alignItems: 'center',
+    marginVertical: 24,
   },
-  buttonText: {
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  avatarText: {
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  email: {
     fontSize: 16,
-    fontWeight: "bold",
+    color: 'gray',
+  },
+  section: {
+    marginVertical: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  menuItemText: {
+    fontSize: 16,
+    marginLeft: 16,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 'auto',
+    paddingVertical: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    marginBottom: 16,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });

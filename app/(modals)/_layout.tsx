@@ -18,7 +18,6 @@ export default function ModalsLayout() {
         headerShown: true,
         presentation: "modal",
         headerShadowVisible: false,
-        // Deshabilitar animaciones para reducir problemas de navegación
         animation: Platform.OS === 'ios' ? 'default' : 'none',
       }}
     />
