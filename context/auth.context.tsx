@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import { apiClient } from '@/config/http-client.config';
+import { apiClient } from '@/config/axios.config';
 
 interface User {
   id: string;

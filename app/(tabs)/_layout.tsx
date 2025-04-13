@@ -51,10 +51,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Settings',
+          title: 'News',
           tabBarShowLabel: false,
           tabBarBackground: () => <View style={{ flex: 1, backgroundColor: Colors[colorScheme ?? 'light'].background }} />,
-          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
         }}
       />
     </Tabs>

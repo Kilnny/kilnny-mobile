@@ -35,7 +35,7 @@ export default function LoginScreen() {
     try {
       await login(email, password);
     } catch (error) {
-      Alert.alert('Error', error.message || 'No se pudo iniciar sesión');
+      Alert.alert('Error', error instanceof Error ? error.message : 'No se pudo iniciar sesión');
     } finally {
       setIsLoading(false);
     }

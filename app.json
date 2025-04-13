@@ -2,16 +2,20 @@
   "expo": {
     "name": "apkfly-client",
     "slug": "apkfly-client",
+    "scheme": "apkfly-client",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#d1d5db"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.glez.dev.apkflyclient"
@@ -23,6 +27,16 @@
       },
       "package": "com.glez.dev.apkflyclient"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bdd808b4-1ea9-4bf1-a143-df141b6afc6f"
+      }
+    }
   }
 }

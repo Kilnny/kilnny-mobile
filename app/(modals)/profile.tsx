@@ -6,8 +6,9 @@ import Colors from '@/constants/Colors';
 import { Stack } from 'expo-router';
 import { useAuth } from '@/context/auth.context';
 import { View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, EvilIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 export default function ProfileModal() {
   const colorScheme = useColorScheme();
@@ -29,6 +30,11 @@ export default function ProfileModal() {
           headerStyle: {
             backgroundColor: bgColor,
           },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()} style={{  }}>
+              <EvilIcons name="arrow-left" size={36} color={textColor} />
+            </TouchableOpacity>
+          ),
         }}
       />
 
