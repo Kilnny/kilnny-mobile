@@ -42,10 +42,7 @@ export default function ProjectsScreen() {
         timeout: 20000,
       });
 
-      console.log("Projects data type:", typeof projectsData);
-
       if (projectsData && Array.isArray(projectsData)) {
-        console.log("Projects found:", projectsData.length);
         setProjects(projectsData);
       } else {
         console.warn("Formato inesperado:", projectsData);
