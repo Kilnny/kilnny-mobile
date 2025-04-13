@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Alert, FlatList, RefreshControl, TouchableOpacity } from "react-native";
 import { MyView, MyText } from "@/components/Themed";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome } from "@expo/vector-icons";
@@ -9,7 +9,8 @@ import SkeletonCard from "@/components/SkeletonCard";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { apiClient } from "@/config/axios.config";
-import { Project } from "@/types/projects";
+import { BuildState, Project } from "@/types/projects";
+import { useApkInstaller } from "@/hooks/useApkInstaller";
 
 export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -18,6 +19,21 @@ export default function ProjectsScreen() {
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const router = useRouter();
+  const { installing, installApk } = useApkInstaller();
+
+  const handleInstallLatestBuild = async (project: Project) => {
+    if (!project.latestBuild?.id) {
+      Alert.alert("Error", "Este proyecto no tiene builds disponibles");
+      return;
+    }
+
+    try {
+      await installApk(project.latestBuild.id);
+      fetchProjects();
+    } catch (error) {
+      console.error("Error al instalar:", error);
+    }
+  };
 
   const fetchProjects = async () => {
     try {
@@ -84,20 +100,7 @@ export default function ProjectsScreen() {
         onPress={() => navigateToProjectDetail(project)}
       >
         <View className="p-4 flex-row">
-          {project.picture ? (
-            <Image
-              source={{
-                uri: project.picture,
-              }}
-              className="w-20 h-20 rounded-lg"
-            />
-          ) : (
-            <View className="w-20 h-20 bg-gray-200 rounded-lg justify-center items-center">
-              <MyText className="text-4xl font-bold text-gray-500">
-                {project.name.charAt(0).toUpperCase()}
-              </MyText>
-            </View>
-          )}
+          {/* Mantén el código de la imagen del proyecto */}
 
           <View className="ml-4 flex-1 justify-between">
             <View>
@@ -110,44 +113,20 @@ export default function ProjectsScreen() {
             <View className="flex-row justify-between items-center mt-2">
               {latestBuild ? (
                 <>
-                  <MyText className="text-xs text-gray-500">
-                    Latest: v{latestBuild.version}
-                  </MyText>
-
-                  {latestBuild.state === "installed" ? (
-                    <FontAwesome
-                      name="check-circle"
-                      size={24}
-                      color={textColor}
-                    />
-                  ) : (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: textColor,
-                      }}
-                      className="px-4 py-1 rounded"
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        console.log(
-                          `Installing latest build for ${project.name}`
-                        );
-                      }}
-                    >
-                      <MyText
-                        style={{
-                          color:
-                            colorScheme === "dark"
-                              ? Colors.light.text
-                              : Colors.dark.text,
-                        }}
-                        className="text-sm"
-                      >
-                        {latestBuild.state === "hasUpdate"
-                          ? "Update"
-                          : "Install"}
-                      </MyText>
-                    </TouchableOpacity>
-                  )}
+                  <MyText className="text-xs">v{latestBuild.version}</MyText>
+                  <TouchableOpacity
+                    className="bg-blue-500 rounded-md px-4 py-1"
+                    disabled={installing || latestBuild.state === BuildState.INSTALLED}
+                    onPress={() => handleInstallLatestBuild(project)}
+                  >
+                    {installing ? (
+                      <ActivityIndicator size="small" color="white" />
+                    ) : latestBuild.state === BuildState.INSTALLED ? (
+                      <MyText className="text-white text-xs">Instalado</MyText>
+                    ) : (
+                      <MyText className="text-white text-xs">Instalar</MyText>
+                    )}
+                  </TouchableOpacity>
                 </>
               ) : (
                 <FontAwesome

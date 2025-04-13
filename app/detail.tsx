@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams, Stack, useRouter } from "expo-router";
 import { MyText, MyView } from "@/components/Themed";
@@ -17,6 +18,7 @@ import { useApps } from "@/context/app-state.context";
 import { useState, useEffect } from "react";
 import { apiClient } from "@/config/axios.config";
 import { Build, BuildState } from "@/types/projects";
+import { useApkInstaller } from "@/hooks/useApkInstaller";
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{
@@ -30,7 +32,7 @@ export default function DetailsScreen() {
     releaseDate: string;
     size: string;
     whatToTest: string;
-    projectId: string; // Añadir projectId para buscar builds
+    projectId: string;
   }>();
 
   const { updateAppState, apps } = useApps();
@@ -46,7 +48,6 @@ export default function DetailsScreen() {
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const router = useRouter();
 
-  // Cargar las últimas builds al inicializar
   useEffect(() => {
     const fetchBuilds = async () => {
       if (!params.projectId) return;
@@ -54,7 +55,6 @@ export default function DetailsScreen() {
       try {
         setLoading(true);
         const data = await apiClient.get(`/builds/project/${params.projectId}`);
-        // Ordenamos por buildNumber descendente y tomamos las 5 últimas
         const latestBuilds = data
           .sort(
             (a: { buildNumber: number }, b: { buildNumber: number }) =>
@@ -74,7 +74,6 @@ export default function DetailsScreen() {
     fetchBuilds();
   }, [params.projectId]);
 
-  // Filtrar builds basados en la búsqueda
   useEffect(() => {
     if (!searchQuery.trim()) {
       setFilteredBuilds(builds);
@@ -98,32 +97,32 @@ export default function DetailsScreen() {
     updateAppState(Number(params.id));
   };
 
+  const { installing, installApk } = useApkInstaller();
+
+  // Reemplaza tu función handleInstallBuild actual con esta:
   const handleInstallBuild = async (buildId: string) => {
     try {
-      await apiClient.post(`/installations`, {
-        buildId,
-        status: "INSTALLING",
-      });
-
-      // Actualizar estado en UI
-      setFilteredBuilds((prevBuilds) =>
-        prevBuilds.map((build) =>
-          build.id === buildId
-            ? { ...build, state: BuildState.INSTALLED }
-            : build
-        )
-      );
-
-      // También actualizar el array de builds original
-      setBuilds((prevBuilds) =>
-        prevBuilds.map((build) =>
-          build.id === buildId
-            ? { ...build, state: BuildState.INSTALLED }
-            : build
-        )
-      );
-
-      console.log(`Installing build ${buildId}`);
+      // Iniciar la instalación real del APK
+      const success = await installApk(buildId);
+      
+      if (success) {
+        // Actualizar la UI como ya lo estás haciendo
+        setFilteredBuilds((prevBuilds) =>
+          prevBuilds.map((build) =>
+            build.id === buildId
+              ? { ...build, state: BuildState.INSTALLED }
+              : build
+          )
+        );
+        
+        setBuilds((prevBuilds) =>
+          prevBuilds.map((build) =>
+            build.id === buildId
+              ? { ...build, state: BuildState.INSTALLED }
+              : build
+          )
+        );
+      }
     } catch (error) {
       console.error("Error installing build:", error);
     }
@@ -145,38 +144,48 @@ export default function DetailsScreen() {
           style={{ backgroundColor: textColor }}
           className="rounded-md px-6 py-2 mt-3"
           onPress={handleInstallUpdate}
+          disabled={installing}
         >
-          <MyText
-            style={{
-              color:
-                textColor === Colors.light.text
-                  ? Colors.dark.text
-                  : Colors.light.text,
-            }}
-            className="text-center"
-          >
-            Update
-          </MyText>
+          {installing ? (
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <MyText
+              style={{
+                color:
+                  textColor === Colors.light.text
+                    ? Colors.dark.text
+                    : Colors.light.text,
+              }}
+              className="text-center"
+            >
+              Actualizar
+            </MyText>
+          )}
         </TouchableOpacity>
       );
     } else {
       return (
         <TouchableOpacity
           style={{ backgroundColor: textColor }}
-          className="bg-gray-200 rounded-md px-6 py-2 mt-3"
-          onPress={handleInstallUpdate}
+          className="rounded-md px-6 py-2 mt-3"
+          onPress={() => handleInstallBuild(params.id)}
+          disabled={installing}
         >
-          <MyText
-            style={{
-              color:
-                textColor === Colors.light.text
-                  ? Colors.dark.text
-                  : Colors.light.text,
-            }}
-            className="text-center"
-          >
-            Install
-          </MyText>
+          {installing ? (
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <MyText
+              style={{
+                color:
+                  textColor === Colors.light.text
+                    ? Colors.dark.text
+                    : Colors.light.text,
+              }}
+              className="text-center"
+            >
+              Instalar
+            </MyText>
+          )}
         </TouchableOpacity>
       );
     }
