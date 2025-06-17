@@ -34,7 +34,10 @@
       "package": "com.glez.dev.apkflyclient"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-build-properties",
+      "expo-font",
+      "expo-web-browser"
     ],
     "extra": {
       "router": {
