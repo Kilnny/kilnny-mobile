@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.expo.dev)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx nest build:*)",
+      "Bash(dir:*)",
+      "Bash(timeout 15 npx nest start:*)",
+      "Bash(yarn list:*)",
+      "Bash(timeout 15 node:*)",
+      "Bash(yarn add:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
