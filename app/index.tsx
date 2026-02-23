@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Redirect } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MyView } from '@/components/Themed';
 import { useAuth } from '@/context/auth.context';
 

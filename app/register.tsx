@@ -36,7 +36,7 @@ export default function RegisterScreen() {
     try {
       await register(email, name, password);
     } catch (error) {
-      Alert.alert('Error', error.message || 'No se pudo registrar');
+      Alert.alert('Error', error instanceof Error ? error.message : 'No se pudo registrar');
     } finally {
       setIsLoading(false);
     }

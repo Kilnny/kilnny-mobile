@@ -9,7 +9,15 @@
       "Bash(yarn list:*)",
       "Bash(timeout 15 node:*)",
       "Bash(yarn add:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(yarn remove:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npx tsx:*)",
+      "Bash(ls:*)",
+      "Read(//d/Projects/apkfly/apkfly-client/**)",
+      "Bash(npx vite build)",
+      "Bash(npx prisma:*)"
     ]
   }
 }

@@ -13,14 +13,19 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   NativeSyntheticEvent,
-  TextInputFocusEventData
+  TextInputFocusEventData,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { apiClient } from "@/config/axios.config";
 
 export default function FeedbackModal() {
+  const { buildId, projectName } = useLocalSearchParams<{ buildId: string; projectName: string }>();
   const [feedback, setFeedback] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const router = useRouter();
@@ -59,14 +64,32 @@ export default function FeedbackModal() {
     };
   }, [isEditing]);
 
-  // Manejar envío de feedback
-  const handleSubmit = () => {
-    console.log("Send feedback button pressed:", feedback);
-    Keyboard.dismiss();
-    // Pequeño timeout para asegurar que el teclado se cierra antes de navegar
-    setTimeout(() => {
-      router.back();
-    }, 150);
+  const handleSubmit = async () => {
+    if (!feedback.trim()) {
+      Alert.alert('Error', 'Por favor escribe tu feedback antes de enviar.');
+      return;
+    }
+    if (!buildId) {
+      Alert.alert('Error', 'No se encontró un build asociado.');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await apiClient.post('/feedback', {
+        content: feedback.trim(),
+        buildId,
+      });
+      Keyboard.dismiss();
+      Alert.alert('Feedback enviado', 'Gracias por tu feedback.', [
+        { text: 'OK', onPress: () => router.back() },
+      ]);
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      Alert.alert('Error', 'No se pudo enviar el feedback. Inténtalo de nuevo.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Manejadores de eventos para el TextInput
@@ -128,22 +151,27 @@ export default function FeedbackModal() {
             </View>
 
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: textColor }]}
+              style={[styles.button, { backgroundColor: textColor, opacity: submitting ? 0.6 : 1 }]}
               onPress={handleSubmit}
+              disabled={submitting || !feedback.trim()}
             >
-              <MyText
-                style={[
-                  styles.buttonText,
-                  {
-                    color:
-                      textColor === Colors.light.text
-                        ? Colors.dark.text
-                        : Colors.light.text,
-                  },
-                ]}
-              >
-                Send Feedback
-              </MyText>
+              {submitting ? (
+                <ActivityIndicator color={textColor === Colors.light.text ? Colors.dark.text : Colors.light.text} />
+              ) : (
+                <MyText
+                  style={[
+                    styles.buttonText,
+                    {
+                      color:
+                        textColor === Colors.light.text
+                          ? Colors.dark.text
+                          : Colors.light.text,
+                    },
+                  ]}
+                >
+                  Enviar Feedback
+                </MyText>
+              )}
             </TouchableOpacity>
           </MyView>
         </KeyboardAvoidingView>

@@ -12,8 +12,6 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/components/useColorScheme";
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationProvider } from "@/context/navigation.context";
-import { AppsProvider } from "@/context/app-state.context";
 import { AuthProvider } from "@/context/auth.context";
 
 export const unstable_settings = {
@@ -50,24 +48,20 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <NavigationProvider>
-      <SafeAreaProvider>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <AuthProvider>
-            <AppsProvider>
-              <Stack>
-                <Stack.Screen name="welcome" options={{ headerShown: false }} />
-                <Stack.Screen name="login" options={{ headerShown: false }} />
-                <Stack.Screen name="register" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="(modals)" options={{ headerShown: false }} />
-              </Stack>
-            </AppsProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </NavigationProvider>
+    <SafeAreaProvider>
+      <ThemeProvider
+        value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
+        <AuthProvider>
+          <Stack>
+            <Stack.Screen name="welcome" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(modals)" options={{ headerShown: false }} />
+          </Stack>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

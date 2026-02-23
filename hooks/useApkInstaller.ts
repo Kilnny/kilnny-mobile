@@ -4,11 +4,11 @@ import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { Platform, Alert } from 'react-native';
 import { apiClient } from '../config/axios.config';
+import { API_URL } from '../config/envs.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useApkInstaller() {
   const [installing, setInstalling] = useState(false);
-  const API_URL = 'http://172.20.10.2:3000/api';
 
   const installApk = async (buildId: string): Promise<boolean> => {
     if (Platform.OS !== 'android') {
@@ -35,25 +35,19 @@ export function useApkInstaller() {
         await FileSystem.makeDirectoryAsync(downloadDir, { intermediates: true });
       }
 
-      console.log(`Descargando desde: ${downloadUrl}`);
       const { uri } = await FileSystem.downloadAsync(downloadUrl, downloadPath, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       
-      console.log(`APK descargado en: ${uri}`);
-
       const contentUri = await FileSystem.getContentUriAsync(uri);
-      console.log(`Content URI: ${contentUri}`);
 
       const result = await IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
         data: contentUri,
         flags: 1,
         type: 'application/vnd.android.package-archive'
       });
-
-      console.log('Instalador iniciado con resultado:', result);
 
       setInstalling(false);
       return true;

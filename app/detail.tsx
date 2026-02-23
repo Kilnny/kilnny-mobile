@@ -14,7 +14,6 @@ import { TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
-import { useApps } from "@/context/app-state.context";
 import { useState, useEffect } from "react";
 import { apiClient } from "@/config/axios.config";
 import { Build, BuildState } from "@/types/projects";
@@ -35,14 +34,12 @@ export default function DetailsScreen() {
     projectId: string;
   }>();
 
-  const { updateAppState, apps } = useApps();
   const [builds, setBuilds] = useState<Build[]>([]);
   const [filteredBuilds, setFilteredBuilds] = useState<Build[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const currentApp = apps.find((app) => app.id === Number(params.id));
-  const currentState = currentApp?.state || params.state;
+  const currentState = params.state;
 
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
@@ -90,11 +87,11 @@ export default function DetailsScreen() {
   }, [searchQuery, builds]);
 
   const navigateToFeedback = () => {
-    router.push("/(modals)/feedback");
-  };
-
-  const handleInstallUpdate = () => {
-    updateAppState(Number(params.id));
+    const latestBuildId = builds.length > 0 ? builds[0].id : '';
+    router.push({
+      pathname: "/(modals)/feedback",
+      params: { buildId: latestBuildId, projectName: params.name || '' },
+    });
   };
 
   const { installing, installApk } = useApkInstaller();
@@ -143,7 +140,7 @@ export default function DetailsScreen() {
         <TouchableOpacity
           style={{ backgroundColor: textColor }}
           className="rounded-md px-6 py-2 mt-3"
-          onPress={handleInstallUpdate}
+          onPress={() => handleInstallBuild(params.id)}
           disabled={installing}
         >
           {installing ? (

@@ -3,12 +3,11 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { MyText, MyView } from '@/components/Themed';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth.context';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { FontAwesome, EvilIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 
 export default function ProfileModal() {
   const colorScheme = useColorScheme();
@@ -56,17 +55,26 @@ export default function ProfileModal() {
         <MyView style={styles.section}>
           <MyText style={styles.sectionTitle}>Configuración</MyText>
           
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estara disponible pronto.')}
+          >
             <FontAwesome name="user" size={18} color={textColor} />
             <MyText style={styles.menuItemText}>Editar Perfil</MyText>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.menuItem}>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => { router.back(); router.push('/(tabs)/two'); }}
+          >
             <FontAwesome name="bell" size={18} color={textColor} />
             <MyText style={styles.menuItemText}>Notificaciones</MyText>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.menuItem}>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estara disponible pronto.')}
+          >
             <FontAwesome name="lock" size={18} color={textColor} />
             <MyText style={styles.menuItemText}>Privacidad y Seguridad</MyText>
           </TouchableOpacity>

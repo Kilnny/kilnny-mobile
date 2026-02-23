@@ -1,8 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-
-const API_URL = 'http://172.20.10.2:3000/api';
+import { API_URL } from './envs.config';
 
 export class ApiError extends Error {
   statusCode: number;
@@ -82,14 +81,14 @@ axiosInstance.interceptors.response.use(
           { headers: { 'Content-Type': 'application/json' } }
         );
 
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
+        const { access_token, refresh_token } = response.data;
 
-        await AsyncStorage.setItem('@auth_token', accessToken);
-        await AsyncStorage.setItem('@refresh_token', newRefreshToken);
+        await AsyncStorage.setItem('@auth_token', access_token);
+        await AsyncStorage.setItem('@refresh_token', refresh_token);
 
-        processQueue(null, accessToken);
-        
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        processQueue(null, access_token);
+
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
       

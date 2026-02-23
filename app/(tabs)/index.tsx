@@ -143,7 +143,11 @@ export default function ProjectsScreen() {
     <MyView className="flex-1">
       <View className="flex-row items-center justify-between m-4">
         <MyText className="text-xl font-bold">Your Projects</MyText>
-        <AntDesign name="pluscircleo" size={24} color={textColor} />
+        <TouchableOpacity
+          onPress={() => Alert.alert('Crear proyecto', 'Los proyectos se crean desde la web o el CLI.\n\napkfly init')}
+        >
+          <AntDesign name="pluscircleo" size={24} color={textColor} />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={isLoading ? Array(4).fill({}) : projects}
