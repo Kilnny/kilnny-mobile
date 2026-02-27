@@ -17,7 +17,19 @@
       "Bash(ls:*)",
       "Read(//d/Projects/apkfly/apkfly-client/**)",
       "Bash(npx vite build)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(node --version)",
+      "WebFetch(domain:github.com)",
+      "Bash(npx eas-cli init --id 9dd1b76d-2e9a-4252-ac1a-37cd1badde0e --non-interactive)",
+      "Bash(dd if=/dev/urandom of=test-app.apk bs=1024 count=512)",
+      "Bash(curl -s http://localhost:3000/api/auth/refresh -X POST -H \"Content-Type: application/json\" -d '{\"\"refresh_token\"\":\"\"5db14aae-47ba-4519-9c38-af540053c759\"\"}')",
+      "Bash(curl -s http://localhost:3000/api/auth/refresh -X POST -H \"Content-Type: application/json\" -d '{\"\"refreshToken\"\":\"\"5db14aae-47ba-4519-9c38-af540053c759\"\"}')",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYW5kcm9nbGV6MDBAZ21haWwuY29tIiwic3ViIjoiNWFiZDAxNjctYjk2ZS00ZjZiLWFmZjctZGM1NThhMzQ2ZDVmIiwiaWF0IjoxNzcyMTMxMDA1LCJleHAiOjE3NzIxMzE5MDV9.rs52l3TqdWYv0KaiBN-XV9mKROX_fjhWTODxXkRI45k\")",
+      "Bash(curl -s http://localhost:3000/api/projects -H \"Authorization: Bearer $TOKEN\")",
+      "Bash(EXPO_TOKEN=test npx tsx /d/Projects/apkfly/cli/src/index.ts --push --from expo)",
+      "Bash(node --import tsx /d/Projects/apkfly/cli/src/index.ts --whoami)",
+      "Bash(curl -s https://api.expo.dev/graphql -H \"Content-Type: application/json\" -H \"Authorization: Bearer 42cm95B73flnHg9ik2W1vXdRiCZVdXave_dTYg25\" -d '{:*)",
+      "Bash(xargs -I {} basename {})"
     ]
   }
 }

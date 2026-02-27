@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (email: string, name: string, password: string) => {
     try {
       const data = await apiClient.post('/auth/register', { email, name, password });
-      
+
       await Promise.all([
         AsyncStorage.setItem('@auth_token', data.access_token),
         AsyncStorage.setItem('@refresh_token', data.refresh_token),
@@ -108,7 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading: false,
       });
 
-      router.replace('/(tabs)');
+      // Don't auto-redirect — let the register screen navigate to verify
     } catch (error) {
       console.error('Register error:', error);
       throw error;

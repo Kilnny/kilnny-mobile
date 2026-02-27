@@ -1,8 +1,8 @@
-import { ActivityIndicator, Alert, FlatList, RefreshControl, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Alert, FlatList, RefreshControl, TouchableOpacity, Modal, TextInput, StyleSheet } from "react-native";
 import { MyView, MyText } from "@/components/Themed";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome } from "@expo/vector-icons";
-import { View, Image } from "react-native";
+import { View } from "react-native";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import SkeletonCard from "@/components/SkeletonCard";
@@ -16,8 +16,13 @@ export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [redeemVisible, setRedeemVisible] = useState(false);
+  const [redeemCode, setRedeemCode] = useState('');
+  const [redeemLoading, setRedeemLoading] = useState(false);
   const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
+  const bgColor = colorScheme ? Colors[colorScheme].background : Colors.light.background;
   const router = useRouter();
   const { installing, installApk } = useApkInstaller();
 
@@ -60,6 +65,24 @@ export default function ProjectsScreen() {
     fetchProjects();
   };
 
+  const handleRedeemCode = async () => {
+    const code = redeemCode.trim();
+    if (!code) return;
+
+    setRedeemLoading(true);
+    try {
+      await apiClient.post('/invitations/redeem', { code });
+      setRedeemVisible(false);
+      setRedeemCode('');
+      Alert.alert('Invitación aceptada', 'Te has unido al proyecto exitosamente.');
+      fetchProjects();
+    } catch (error) {
+      Alert.alert('Error', error instanceof Error ? error.message : 'Código inválido o expirado');
+    } finally {
+      setRedeemLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -97,8 +120,6 @@ export default function ProjectsScreen() {
         onPress={() => navigateToProjectDetail(project)}
       >
         <View className="p-4 flex-row">
-          {/* Mantén el código de la imagen del proyecto */}
-
           <View className="ml-4 flex-1 justify-between">
             <View>
               <MyText className="text-lg font-bold">{project.name}</MyText>
@@ -142,10 +163,8 @@ export default function ProjectsScreen() {
   return (
     <MyView className="flex-1">
       <View className="flex-row items-center justify-between m-4">
-        <MyText className="text-xl font-bold">Your Projects</MyText>
-        <TouchableOpacity
-          onPress={() => Alert.alert('Crear proyecto', 'Los proyectos se crean desde la web o el CLI.\n\napkfly init')}
-        >
+        <MyText className="text-xl font-bold">Tus Proyectos</MyText>
+        <TouchableOpacity onPress={() => setRedeemVisible(true)}>
           <AntDesign name="pluscircleo" size={24} color={textColor} />
         </TouchableOpacity>
       </View>
@@ -161,11 +180,102 @@ export default function ProjectsScreen() {
         ListEmptyComponent={
           !isLoading ? (
             <MyView className="items-center justify-center py-10">
-              <MyText className="text-gray-500">No projects found</MyText>
+              <MyText className="text-gray-500">No se encontraron proyectos</MyText>
             </MyView>
           ) : null
         }
       />
+
+      {/* Redeem Code Modal */}
+      <Modal
+        visible={redeemVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setRedeemVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: isDark ? '#1c1c1c' : '#fff' }]}>
+            <MyText style={styles.modalTitle}>Código de invitación</MyText>
+            <MyText style={[styles.modalSubtitle, { color: 'gray' }]}>
+              Ingresa el código que recibiste para unirte a un proyecto.
+            </MyText>
+            <TextInput
+              style={[styles.codeInput, { color: textColor, borderColor: isDark ? '#444' : '#ddd' }]}
+              value={redeemCode}
+              onChangeText={(text) => setRedeemCode(text.toUpperCase())}
+              placeholder="Ej: A1B2C3"
+              placeholderTextColor="gray"
+              autoCapitalize="characters"
+              maxLength={6}
+              autoFocus
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalBtn, { borderColor: isDark ? '#444' : '#ddd', borderWidth: 1 }]}
+                onPress={() => { setRedeemVisible(false); setRedeemCode(''); }}
+              >
+                <MyText>Cancelar</MyText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalBtn, { backgroundColor: '#1dc27d' }]}
+                onPress={handleRedeemCode}
+                disabled={redeemLoading || redeemCode.trim().length < 4}
+              >
+                {redeemLoading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <MyText style={{ color: '#fff', fontWeight: 'bold' }}>Aceptar</MyText>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </MyView>
   );
 }
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 24,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  codeInput: {
+    fontSize: 24,
+    fontFamily: 'monospace',
+    letterSpacing: 8,
+    textAlign: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalBtn: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

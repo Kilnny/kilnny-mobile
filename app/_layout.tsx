@@ -9,6 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "@/components/useColorScheme";
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -53,10 +54,12 @@ function RootLayoutNav() {
         value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       >
         <AuthProvider>
+          <StatusBar style="auto" translucent />
           <Stack>
             <Stack.Screen name="welcome" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
             <Stack.Screen name="register" options={{ headerShown: false }} />
+            <Stack.Screen name="verify" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="(modals)" options={{ headerShown: false }} />
           </Stack>

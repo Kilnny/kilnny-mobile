@@ -35,6 +35,7 @@ export default function RegisterScreen() {
     setIsLoading(true);
     try {
       await register(email, name, password);
+      router.replace(`/verify?email=${encodeURIComponent(email)}`);
     } catch (error) {
       Alert.alert('Error', error instanceof Error ? error.message : 'No se pudo registrar');
     } finally {

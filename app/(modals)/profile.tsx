@@ -13,6 +13,8 @@ export default function ProfileModal() {
   const colorScheme = useColorScheme();
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const bgColor = colorScheme ? Colors[colorScheme].background : Colors.light.background;
+  const isDark = colorScheme === 'dark';
+  const separatorColor = isDark ? '#333' : '#e0e0e0';
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -29,8 +31,11 @@ export default function ProfileModal() {
           headerStyle: {
             backgroundColor: bgColor,
           },
+          headerTitleStyle: {
+            color: textColor,
+          },
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()} style={{  }}>
+            <TouchableOpacity onPress={() => router.back()} style={{ padding: 4 }}>
               <EvilIcons name="arrow-left" size={36} color={textColor} />
             </TouchableOpacity>
           ),
@@ -39,12 +44,8 @@ export default function ProfileModal() {
 
       <MyView style={styles.container}>
         <MyView style={styles.profileHeader}>
-          <View style={[styles.avatar, { backgroundColor: textColor }]}>
-            <MyText 
-              style={[styles.avatarText, { 
-                color: textColor === Colors.light.text ? Colors.dark.text : Colors.light.text 
-              }]}
-            >
+          <View style={[styles.avatar, { backgroundColor: isDark ? '#333' : '#f0f0f0' }]}>
+            <MyText style={[styles.avatarText, { color: textColor }]}>
               {user?.name.charAt(0).toUpperCase() || 'U'}
             </MyText>
           </View>
@@ -54,17 +55,17 @@ export default function ProfileModal() {
 
         <MyView style={styles.section}>
           <MyText style={styles.sectionTitle}>Configuración</MyText>
-          
+
           <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estara disponible pronto.')}
+            style={[styles.menuItem, { borderBottomColor: separatorColor }]}
+            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estará disponible pronto.')}
           >
             <FontAwesome name="user" size={18} color={textColor} />
             <MyText style={styles.menuItemText}>Editar Perfil</MyText>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.menuItem}
+            style={[styles.menuItem, { borderBottomColor: separatorColor }]}
             onPress={() => { router.back(); router.push('/(tabs)/two'); }}
           >
             <FontAwesome name="bell" size={18} color={textColor} />
@@ -72,15 +73,15 @@ export default function ProfileModal() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estara disponible pronto.')}
+            style={[styles.menuItem, { borderBottomColor: separatorColor }]}
+            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estará disponible pronto.')}
           >
             <FontAwesome name="lock" size={18} color={textColor} />
             <MyText style={styles.menuItemText}>Privacidad y Seguridad</MyText>
           </TouchableOpacity>
         </MyView>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.logoutButton, { borderColor: '#ff3b30' }]}
           onPress={handleLogout}
         >
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
   },
   menuItemText: {
     fontSize: 16,
