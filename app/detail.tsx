@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import { apiClient } from "@/config/axios.config";
 import { Build, BuildState } from "@/types/projects";
 import { useApkInstaller } from "@/hooks/useApkInstaller";
+import { t } from "@/i18n";
 
 export default function DetailsScreen() {
   const params = useLocalSearchParams<{
@@ -155,7 +156,7 @@ export default function DetailsScreen() {
               }}
               className="text-center"
             >
-              Actualizar
+              {t.detail.update}
             </MyText>
           )}
         </TouchableOpacity>
@@ -180,7 +181,7 @@ export default function DetailsScreen() {
               }}
               className="text-center"
             >
-              Instalar
+              {t.detail.install}
             </MyText>
           )}
         </TouchableOpacity>
@@ -231,42 +232,42 @@ export default function DetailsScreen() {
       {/* El resto del componente con contenido original */}
       <MyView style={styles.section}>
         <TouchableOpacity onPress={navigateToFeedback} className="mb-6">
-          <Text className="text-xl text-[#1dc27d]">Enviar Feedback</Text>
+          <Text className="text-xl text-[#1dc27d]">{t.detail.sendFeedback}</Text>
         </TouchableOpacity>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-3">Que probar?</MyText>
+          <MyText className="text-2xl font-bold mb-3">{t.detail.whatToTest}</MyText>
           <MyText className="text-gray-600 leading-6">
             {params.whatToTest}
           </MyText>
         </View>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-3">Descripcion</MyText>
+          <MyText className="text-2xl font-bold mb-3">{t.detail.description}</MyText>
           <MyText className="text-gray-600 leading-6">
             {params.description}
           </MyText>
         </View>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-4">Informacion</MyText>
+          <MyText className="text-2xl font-bold mb-4">{t.detail.info}</MyText>
           <View className="space-y-4">
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Desarrollador</MyText>
+              <MyText className="text-lg">{t.detail.developer}</MyText>
               <MyText className="text-gray-600">{params.developer}</MyText>
             </View>
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Fecha</MyText>
+              <MyText className="text-lg">{t.detail.date}</MyText>
               <MyText className="text-gray-600">
                 {params.releaseDate ? new Date(params.releaseDate).toLocaleDateString() : "-"}
               </MyText>
             </View>
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Version</MyText>
+              <MyText className="text-lg">{t.detail.version}</MyText>
               <MyText className="text-gray-600">{params.version}</MyText>
             </View>
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Tamano</MyText>
+              <MyText className="text-lg">{t.detail.size}</MyText>
               <MyText className="text-gray-600">{params.size}</MyText>
             </View>
           </View>
@@ -274,14 +275,14 @@ export default function DetailsScreen() {
 
         {/* Nueva sección para mostrar las builds anteriores */}
         <View className="mt-4">
-          <MyText className="text-2xl font-bold mb-3">Builds Anteriores</MyText>
+          <MyText className="text-2xl font-bold mb-3">{t.detail.previousBuilds}</MyText>
 
           {/* Buscador de builds */}
           <View className="flex-row items-center mb-4 bg-[#ececec] dark:bg-[#242424] rounded-lg px-3 py-2">
             <FontAwesome name="search" size={16} color={textColor} />
             <TextInput
               className="flex-1 ml-2 text-base"
-              placeholder="Buscar por numero de build o version..."
+              placeholder={t.detail.searchBuilds}
               placeholderTextColor="#888"
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -290,7 +291,7 @@ export default function DetailsScreen() {
           </View>
 
           {loading ? (
-            <MyText className="text-center py-4">Cargando builds...</MyText>
+            <MyText className="text-center py-4">{t.detail.loadingBuilds}</MyText>
           ) : filteredBuilds.length > 0 ? (
             <View className="space-y-4">
               {filteredBuilds.map((build) => (
@@ -328,7 +329,7 @@ export default function DetailsScreen() {
                               : Colors.dark.text,
                         }}
                       >
-                        {build.state === "installed" ? "Instalada" : "Instalar"}
+                        {build.state === "installed" ? t.projects.installed : t.detail.install}
                       </MyText>
                     </TouchableOpacity>
                   </View>
@@ -348,8 +349,8 @@ export default function DetailsScreen() {
           ) : (
             <MyText className="text-center py-4 text-gray-500">
               {searchQuery
-                ? "No se encontraron builds"
-                : "No hay builds disponibles"}
+                ? t.detail.noBuildsFound
+                : t.detail.noBuildsAvailable}
             </MyText>
           )}
         </View>

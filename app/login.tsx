@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/auth.context';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { t } from '@/i18n';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -27,7 +28,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor complete todos los campos');
+      Alert.alert(t.common.error, t.auth.fillAllFields);
       return;
     }
 
@@ -35,7 +36,7 @@ export default function LoginScreen() {
     try {
       await login(email, password);
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'No se pudo iniciar sesión');
+      Alert.alert(t.common.error, error instanceof Error ? error.message : t.auth.loginFailed);
     } finally {
       setIsLoading(false);
     }
@@ -50,23 +51,23 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor }]}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.innerContainer}
       >
         <View style={styles.logoContainer}>
-          <Image 
+          <Image
             source={require('../assets/images/icon.png')}
             style={styles.logo}
           />
           <MyText style={styles.title}>ApkFly</MyText>
-          <MyText style={styles.subtitle}>Iniciar Sesión</MyText>
+          <MyText style={styles.subtitle}>{t.auth.loginTitle}</MyText>
         </View>
 
         <MyView style={styles.inputContainer}>
           <TextInput
             style={[styles.input, { color: textColor, borderColor: 'gray' }]}
-            placeholder="Email"
+            placeholder={t.auth.email}
             placeholderTextColor="gray"
             value={email}
             onChangeText={setEmail}
@@ -76,7 +77,7 @@ export default function LoginScreen() {
 
           <TextInput
             style={[styles.input, { color: textColor, borderColor: 'gray' }]}
-            placeholder="Contraseña"
+            placeholder={t.auth.password}
             placeholderTextColor="gray"
             value={password}
             onChangeText={setPassword}
@@ -92,17 +93,17 @@ export default function LoginScreen() {
               <ActivityIndicator color={backgroundColor} />
             ) : (
               <MyText style={[styles.buttonText, { color: backgroundColor }]}>
-                Iniciar Sesión
+                {t.auth.login}
               </MyText>
             )}
           </TouchableOpacity>
         </MyView>
 
         <View style={styles.footer}>
-          <MyText style={styles.footerText}>¿No tienes una cuenta?</MyText>
+          <MyText style={styles.footerText}>{t.auth.dontHaveAccount}</MyText>
           <TouchableOpacity onPress={navigateToRegister}>
             <MyText style={[styles.footerLink, { color: '#1dc27d' }]}>
-              Regístrate
+              {t.auth.signUp}
             </MyText>
           </TouchableOpacity>
         </View>

@@ -20,6 +20,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { apiClient } from "@/config/axios.config";
+import { t } from "@/i18n";
 
 export default function FeedbackModal() {
   const { buildId, projectName } = useLocalSearchParams<{ buildId: string; projectName: string }>();
@@ -65,11 +66,11 @@ export default function FeedbackModal() {
 
   const handleSubmit = async () => {
     if (!feedback.trim()) {
-      Alert.alert('Error', 'Por favor escribe tu feedback antes de enviar.');
+      Alert.alert(t.common.error, t.feedback.emptyError);
       return;
     }
     if (!buildId) {
-      Alert.alert('Error', 'No se encontró un build asociado.');
+      Alert.alert(t.common.error, t.feedback.noBuildError);
       return;
     }
 
@@ -80,12 +81,12 @@ export default function FeedbackModal() {
         buildId,
       });
       Keyboard.dismiss();
-      Alert.alert('Feedback enviado', 'Gracias por tu feedback.', [
-        { text: 'OK', onPress: () => router.back() },
+      Alert.alert(t.feedback.sent, t.feedback.sentDesc, [
+        { text: t.common.ok, onPress: () => router.back() },
       ]);
     } catch (error) {
       console.error('Error sending feedback:', error);
-      Alert.alert('Error', 'No se pudo enviar el feedback. Inténtalo de nuevo.');
+      Alert.alert(t.common.error, t.feedback.sendFailed);
     } finally {
       setSubmitting(false);
     }
@@ -107,7 +108,7 @@ export default function FeedbackModal() {
       <View style={{ flex: 1, backgroundColor: colorScheme === "dark" ? "#000" : "#fff" }}>
         <Stack.Screen
           options={{
-            title: "Feedback",
+            title: t.feedback.title,
             presentation: "modal",
             headerShadowVisible: false,
             animation: "none", // Desactivar animaciones para evitar problemas
@@ -124,10 +125,7 @@ export default function FeedbackModal() {
         >
           <MyView style={styles.container}>
             <Text style={styles.description}>
-              ¡Hola! 👋 Nos encantaría saber qué piensas sobre nuestra app. Ya sea que
-              tengas una idea brillante, una queja épica, o simplemente quieras decir
-              "¡Hola!", estamos aquí para escucharte. Así que no seas tímido, ¡déjanos
-              tu feedback y hagamos que esta app sea aún más increíble juntos! 🚀
+              {t.feedback.description}
             </Text>
 
             <View style={styles.inputContainer}>
@@ -138,7 +136,7 @@ export default function FeedbackModal() {
                 onChangeText={setFeedback}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
-                placeholder="Escribe tu feedback aquí..."
+                placeholder={t.feedback.placeholder}
                 style={[styles.textInput, { color: textColor }]}
                 textAlignVertical="top"
                 autoComplete="off"
@@ -168,7 +166,7 @@ export default function FeedbackModal() {
                     },
                   ]}
                 >
-                  Enviar Feedback
+                  {t.feedback.send}
                 </MyText>
               )}
             </TouchableOpacity>

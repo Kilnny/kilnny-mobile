@@ -31,7 +31,9 @@
       "Bash(curl -s https://api.expo.dev/graphql -H \"Content-Type: application/json\" -H \"Authorization: Bearer 42cm95B73flnHg9ik2W1vXdRiCZVdXave_dTYg25\" -d '{:*)",
       "Bash(xargs -I {} basename {})",
       "Bash(1:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(npx expo install expo-localization)",
+      "Bash(npm run build)"
     ]
   }
 }

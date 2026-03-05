@@ -5,6 +5,7 @@ import { MyText, MyView } from '@/components/Themed';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
+import { t } from '@/i18n';
 
 export default function WelcomeScreen() {
   const colorScheme = useColorScheme();
@@ -28,9 +29,9 @@ export default function WelcomeScreen() {
           source={require('../assets/images/icon.png')}
           style={styles.logo}
         />
-        <MyText style={styles.title}>Bienvenido a ApkFly</MyText>
+        <MyText style={styles.title}>{t.welcome.title}</MyText>
         <MyText style={styles.description}>
-          La plataforma ideal para distribución y testeo de aplicaciones Android. Similar a TestFlight pero para Android.
+          {t.welcome.description}
         </MyText>
       </MyView>
 
@@ -49,7 +50,7 @@ export default function WelcomeScreen() {
             },
           ]}
         >
-          Comenzar
+          {t.welcome.getStarted}
         </MyText>
       </TouchableOpacity>
     </MyView>

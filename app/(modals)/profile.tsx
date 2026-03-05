@@ -7,6 +7,7 @@ import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth.context';
 import { View, Alert } from 'react-native';
 import { FontAwesome, EvilIcons } from '@expo/vector-icons';
+import { t } from '@/i18n';
 
 export default function ProfileModal() {
   const colorScheme = useColorScheme();
@@ -24,7 +25,7 @@ export default function ProfileModal() {
     <View style={{ flex: 1, backgroundColor: bgColor }}>
       <Stack.Screen
         options={{
-          title: 'Mi Perfil',
+          title: t.profile.title,
           presentation: 'modal',
           headerShadowVisible: false,
           headerStyle: {
@@ -45,22 +46,22 @@ export default function ProfileModal() {
         <MyView style={styles.profileHeader}>
           <View style={[styles.avatar, { backgroundColor: isDark ? '#333' : '#f0f0f0' }]}>
             <MyText style={[styles.avatarText, { color: textColor }]}>
-              {user?.name.charAt(0).toUpperCase() || 'U'}
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
             </MyText>
           </View>
-          <MyText style={styles.name}>{user?.name || 'Usuario'}</MyText>
+          <MyText style={styles.name}>{user?.name || t.profile.user}</MyText>
           <MyText style={styles.email}>{user?.email || 'email@example.com'}</MyText>
         </MyView>
 
         <MyView style={styles.section}>
-          <MyText style={styles.sectionTitle}>Configuración</MyText>
+          <MyText style={styles.sectionTitle}>{t.profile.settings}</MyText>
 
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomColor: separatorColor }]}
-            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estará disponible pronto.')}
+            onPress={() => Alert.alert(t.profile.comingSoon, t.profile.comingSoonDesc)}
           >
             <FontAwesome name="user" size={18} color={textColor} />
-            <MyText style={styles.menuItemText}>Editar Perfil</MyText>
+            <MyText style={styles.menuItemText}>{t.profile.editProfile}</MyText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -68,15 +69,15 @@ export default function ProfileModal() {
             onPress={() => { router.back(); router.push('/(tabs)/two'); }}
           >
             <FontAwesome name="bell" size={18} color={textColor} />
-            <MyText style={styles.menuItemText}>Notificaciones</MyText>
+            <MyText style={styles.menuItemText}>{t.profile.notifications}</MyText>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.menuItem, { borderBottomColor: separatorColor }]}
-            onPress={() => Alert.alert('Proximamente', 'Esta funcionalidad estará disponible pronto.')}
+            onPress={() => Alert.alert(t.profile.comingSoon, t.profile.comingSoonDesc)}
           >
             <FontAwesome name="lock" size={18} color={textColor} />
-            <MyText style={styles.menuItemText}>Privacidad y Seguridad</MyText>
+            <MyText style={styles.menuItemText}>{t.profile.privacy}</MyText>
           </TouchableOpacity>
         </MyView>
 
@@ -85,7 +86,7 @@ export default function ProfileModal() {
           onPress={handleLogout}
         >
           <FontAwesome name="sign-out" size={18} color="#ff3b30" />
-          <MyText style={[styles.logoutText, { color: '#ff3b30' }]}>Cerrar Sesión</MyText>
+          <MyText style={[styles.logoutText, { color: '#ff3b30' }]}>{t.profile.logout}</MyText>
         </TouchableOpacity>
       </MyView>
     </View>

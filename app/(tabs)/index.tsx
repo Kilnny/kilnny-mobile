@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import { apiClient } from "@/config/axios.config";
 import { BuildState, Project } from "@/types/projects";
 import { useApkInstaller } from "@/hooks/useApkInstaller";
+import { t } from "@/i18n";
 
 export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -22,13 +23,12 @@ export default function ProjectsScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
-  const bgColor = colorScheme ? Colors[colorScheme].background : Colors.light.background;
   const router = useRouter();
   const { installing, installApk } = useApkInstaller();
 
   const handleInstallLatestBuild = async (project: Project) => {
     if (!project.latestBuild?.id) {
-      Alert.alert("Error", "Este proyecto no tiene builds disponibles");
+      Alert.alert(t.common.error, t.detail.noBuildError);
       return;
     }
 
@@ -36,7 +36,7 @@ export default function ProjectsScreen() {
       await installApk(project.latestBuild.id);
       fetchProjects();
     } catch (error) {
-      console.error("Error al instalar:", error);
+      console.error("Error installing:", error);
     }
   };
 
@@ -50,10 +50,10 @@ export default function ProjectsScreen() {
       if (projectsData && Array.isArray(projectsData)) {
         setProjects(projectsData);
       } else {
-        console.warn("Formato inesperado:", projectsData);
+        console.warn("Unexpected format:", projectsData);
       }
     } catch (error) {
-      console.error("Error en la petición:", error);
+      console.error("Request error:", error);
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -74,10 +74,10 @@ export default function ProjectsScreen() {
       await apiClient.post('/invitations/redeem', { code });
       setRedeemVisible(false);
       setRedeemCode('');
-      Alert.alert('Invitación aceptada', 'Te has unido al proyecto exitosamente.');
+      Alert.alert(t.projects.invitationAccepted, t.projects.joinedProject);
       fetchProjects();
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Código inválido o expirado');
+      Alert.alert(t.common.error, error instanceof Error ? error.message : t.projects.invalidCode);
     } finally {
       setRedeemLoading(false);
     }
@@ -96,7 +96,7 @@ export default function ProjectsScreen() {
         description: project.description,
         picture: project.picture || "https://via.placeholder.com/100",
         version: project.latestBuild?.version || "N/A",
-        developer: project.developer || "Unknow",
+        developer: project.developer || "Unknown",
         state: project.latestBuild?.state || "notInstalled",
         releaseDate:
           typeof project.latestBuild?.releaseDate === "string"
@@ -150,14 +150,14 @@ export default function ProjectsScreen() {
                     {installing ? (
                       <ActivityIndicator size="small" color="white" />
                     ) : latestBuild.state === BuildState.INSTALLED ? (
-                      <MyText className="text-white text-xs">Instalado</MyText>
+                      <MyText className="text-white text-xs">{t.projects.installed}</MyText>
                     ) : (
-                      <MyText className="text-white text-xs">Instalar</MyText>
+                      <MyText className="text-white text-xs">{t.projects.install}</MyText>
                     )}
                   </TouchableOpacity>
                 </>
               ) : (
-                <MyText className="text-xs text-gray-400">Sin builds disponibles</MyText>
+                <MyText className="text-xs text-gray-400">{t.projects.noBuilds}</MyText>
               )}
             </View>
           </View>
@@ -169,7 +169,7 @@ export default function ProjectsScreen() {
   return (
     <MyView className="flex-1">
       <View className="flex-row items-center justify-between m-4">
-        <MyText className="text-xl font-bold">Tus Proyectos</MyText>
+        <MyText className="text-xl font-bold">{t.projects.title}</MyText>
         <TouchableOpacity onPress={() => setRedeemVisible(true)}>
           <AntDesign name="pluscircleo" size={24} color={textColor} />
         </TouchableOpacity>
@@ -186,7 +186,7 @@ export default function ProjectsScreen() {
         ListEmptyComponent={
           !isLoading ? (
             <MyView className="items-center justify-center py-10">
-              <MyText className="text-gray-500">No se encontraron proyectos</MyText>
+              <MyText className="text-gray-500">{t.projects.noProjects}</MyText>
             </MyView>
           ) : null
         }
@@ -201,15 +201,15 @@ export default function ProjectsScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: isDark ? '#1c1c1c' : '#fff' }]}>
-            <MyText style={styles.modalTitle}>Código de invitación</MyText>
+            <MyText style={styles.modalTitle}>{t.projects.invitationCode}</MyText>
             <MyText style={[styles.modalSubtitle, { color: 'gray' }]}>
-              Ingresa el código que recibiste para unirte a un proyecto.
+              {t.projects.invitationDesc}
             </MyText>
             <TextInput
               style={[styles.codeInput, { color: textColor, borderColor: isDark ? '#444' : '#ddd' }]}
               value={redeemCode}
               onChangeText={(text) => setRedeemCode(text.toUpperCase())}
-              placeholder="Ej: A1B2C3"
+              placeholder={t.projects.placeholder}
               placeholderTextColor="gray"
               autoCapitalize="characters"
               maxLength={6}
@@ -220,7 +220,7 @@ export default function ProjectsScreen() {
                 style={[styles.modalBtn, { borderColor: isDark ? '#444' : '#ddd', borderWidth: 1 }]}
                 onPress={() => { setRedeemVisible(false); setRedeemCode(''); }}
               >
-                <MyText>Cancelar</MyText>
+                <MyText>{t.projects.cancel}</MyText>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalBtn, { backgroundColor: '#1dc27d' }]}
@@ -230,7 +230,7 @@ export default function ProjectsScreen() {
                 {redeemLoading ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
-                  <MyText style={{ color: '#fff', fontWeight: 'bold' }}>Aceptar</MyText>
+                  <MyText style={{ color: '#fff', fontWeight: 'bold' }}>{t.projects.accept}</MyText>
                 )}
               </TouchableOpacity>
             </View>

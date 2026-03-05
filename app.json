@@ -36,7 +36,8 @@
       "expo-router",
       "expo-build-properties",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-localization"
     ],
     "extra": {
       "router": {

@@ -16,6 +16,7 @@ import Colors from '@/constants/Colors';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { apiClient } from '@/config/axios.config';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { t } from '@/i18n';
 
 const CODE_LENGTH = 6;
 
@@ -57,18 +58,18 @@ export default function VerifyScreen() {
   const handleVerify = async () => {
     const fullCode = code.join('');
     if (fullCode.length !== CODE_LENGTH) {
-      Alert.alert('Error', 'Ingresa el codigo completo de 6 digitos');
+      Alert.alert(t.common.error, t.verify.enterFullCode);
       return;
     }
 
     setIsVerifying(true);
     try {
       await apiClient.post('/auth/verify-code', { email, code: fullCode });
-      Alert.alert('Verificado', 'Tu correo ha sido verificado correctamente.', [
-        { text: 'Continuar', onPress: () => router.replace('/(tabs)') },
+      Alert.alert(t.verify.verified, t.verify.verifiedDesc, [
+        { text: t.verify.continue, onPress: () => router.replace('/(tabs)') },
       ]);
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Codigo invalido');
+      Alert.alert(t.common.error, error instanceof Error ? error.message : t.verify.invalidCode);
     } finally {
       setIsVerifying(false);
     }
@@ -78,11 +79,11 @@ export default function VerifyScreen() {
     setIsResending(true);
     try {
       await apiClient.post('/auth/resend-verification', { email, source: 'mobile' });
-      Alert.alert('Enviado', 'Se ha enviado un nuevo codigo a tu correo.');
+      Alert.alert(t.verify.sent, t.verify.sentDesc);
       setCode(Array(CODE_LENGTH).fill(''));
       inputRefs.current[0]?.focus();
     } catch (error) {
-      Alert.alert('Error', 'No se pudo reenviar el codigo');
+      Alert.alert(t.common.error, t.verify.resendFailed);
     } finally {
       setIsResending(false);
     }
@@ -103,9 +104,9 @@ export default function VerifyScreen() {
             source={require('../assets/images/icon.png')}
             style={styles.logo}
           />
-          <MyText style={styles.title}>Verificar correo</MyText>
+          <MyText style={styles.title}>{t.verify.title}</MyText>
           <MyText style={[styles.subtitle, { color: 'gray' }]}>
-            Ingresa el codigo de 6 digitos que enviamos a
+            {t.verify.subtitle}
           </MyText>
           <MyText style={[styles.email, { color: textColor }]}>{email}</MyText>
         </View>
@@ -143,19 +144,19 @@ export default function VerifyScreen() {
             <ActivityIndicator color={backgroundColor} />
           ) : (
             <MyText style={[styles.buttonText, { color: backgroundColor }]}>
-              Verificar
+              {t.verify.verify}
             </MyText>
           )}
         </TouchableOpacity>
 
         <View style={styles.footer}>
-          <MyText style={styles.footerText}>No recibiste el codigo?</MyText>
+          <MyText style={styles.footerText}>{t.verify.didntReceive}</MyText>
           <TouchableOpacity onPress={handleResend} disabled={isResending}>
             {isResending ? (
               <ActivityIndicator size="small" color="#1dc27d" />
             ) : (
               <MyText style={[styles.footerLink, { color: '#1dc27d' }]}>
-                Reenviar
+                {t.verify.resend}
               </MyText>
             )}
           </TouchableOpacity>
@@ -163,7 +164,7 @@ export default function VerifyScreen() {
 
         <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
           <MyText style={{ color: 'gray', fontSize: 14 }}>
-            Verificar mas tarde
+            {t.verify.verifyLater}
           </MyText>
         </TouchableOpacity>
       </KeyboardAvoidingView>
