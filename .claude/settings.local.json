@@ -29,7 +29,9 @@
       "Bash(EXPO_TOKEN=test npx tsx /d/Projects/apkfly/cli/src/index.ts --push --from expo)",
       "Bash(node --import tsx /d/Projects/apkfly/cli/src/index.ts --whoami)",
       "Bash(curl -s https://api.expo.dev/graphql -H \"Content-Type: application/json\" -H \"Authorization: Bearer 42cm95B73flnHg9ik2W1vXdRiCZVdXave_dTYg25\" -d '{:*)",
-      "Bash(xargs -I {} basename {})"
+      "Bash(xargs -I {} basename {})",
+      "Bash(1:*)",
+      "Bash(node -e \":*)"
     ]
   }
 }

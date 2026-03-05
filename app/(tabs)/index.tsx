@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, FlatList, RefreshControl, TouchableOpacity, Modal, TextInput, StyleSheet } from "react-native";
+import { ActivityIndicator, Alert, FlatList, RefreshControl, TouchableOpacity, Modal, TextInput, StyleSheet, Image } from "react-native";
 import { MyView, MyText } from "@/components/Themed";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { FontAwesome } from "@expo/vector-icons";
@@ -120,6 +120,16 @@ export default function ProjectsScreen() {
         onPress={() => navigateToProjectDetail(project)}
       >
         <View className="p-4 flex-row">
+          {project.picture ? (
+            <Image
+              source={{ uri: project.picture }}
+              style={{ width: 56, height: 56, borderRadius: 12 }}
+            />
+          ) : (
+            <View style={{ width: 56, height: 56, borderRadius: 12, backgroundColor: isDark ? '#333' : '#ddd', alignItems: 'center', justifyContent: 'center' }}>
+              <FontAwesome name="android" size={28} color={isDark ? '#888' : '#999'} />
+            </View>
+          )}
           <View className="ml-4 flex-1 justify-between">
             <View>
               <MyText className="text-lg font-bold">{project.name}</MyText>
@@ -147,11 +157,7 @@ export default function ProjectsScreen() {
                   </TouchableOpacity>
                 </>
               ) : (
-                <FontAwesome
-                  name="exclamation-circle"
-                  size={24}
-                  color={textColor}
-                />
+                <MyText className="text-xs text-gray-400">Sin builds disponibles</MyText>
               )}
             </View>
           </View>

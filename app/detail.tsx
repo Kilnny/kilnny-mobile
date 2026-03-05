@@ -204,6 +204,7 @@ export default function DetailsScreen() {
         options={{
           title: "",
           headerShadowVisible: false,
+          statusBarTranslucent: true,
           headerStyle: {
             backgroundColor: colorScheme
               ? Colors[colorScheme].background
@@ -212,7 +213,13 @@ export default function DetailsScreen() {
         }}
       />
       <MyView style={styles.header}>
-        <Image source={{ uri: params.picture }} style={styles.appIcon} />
+        {params.picture && params.picture !== 'https://via.placeholder.com/100' ? (
+          <Image source={{ uri: params.picture }} style={styles.appIcon} />
+        ) : (
+          <View style={[styles.appIcon, { backgroundColor: colorScheme === 'dark' ? '#333' : '#ddd', alignItems: 'center', justifyContent: 'center' }]}>
+            <FontAwesome name="android" size={40} color={colorScheme === 'dark' ? '#888' : '#999'} />
+          </View>
+        )}
         <View style={styles.headerInfo}>
           <MyText className="text-2xl font-bold">{params.name}</MyText>
           <MyText className="text-gray-600">Version {params.version}</MyText>
@@ -224,32 +231,32 @@ export default function DetailsScreen() {
       {/* El resto del componente con contenido original */}
       <MyView style={styles.section}>
         <TouchableOpacity onPress={navigateToFeedback} className="mb-6">
-          <Text className="text-xl text-[#1dc27d]">Send Feedback</Text>
+          <Text className="text-xl text-[#1dc27d]">Enviar Feedback</Text>
         </TouchableOpacity>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-3">What to test?</MyText>
+          <MyText className="text-2xl font-bold mb-3">Que probar?</MyText>
           <MyText className="text-gray-600 leading-6">
             {params.whatToTest}
           </MyText>
         </View>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-3">Description</MyText>
+          <MyText className="text-2xl font-bold mb-3">Descripcion</MyText>
           <MyText className="text-gray-600 leading-6">
             {params.description}
           </MyText>
         </View>
 
         <View className="mb-6">
-          <MyText className="text-2xl font-bold mb-4">Information</MyText>
+          <MyText className="text-2xl font-bold mb-4">Informacion</MyText>
           <View className="space-y-4">
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Developer</MyText>
+              <MyText className="text-lg">Desarrollador</MyText>
               <MyText className="text-gray-600">{params.developer}</MyText>
             </View>
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Release Date</MyText>
+              <MyText className="text-lg">Fecha</MyText>
               <MyText className="text-gray-600">
                 {params.releaseDate ? new Date(params.releaseDate).toLocaleDateString() : "-"}
               </MyText>
@@ -259,7 +266,7 @@ export default function DetailsScreen() {
               <MyText className="text-gray-600">{params.version}</MyText>
             </View>
             <View className="flex-row justify-between">
-              <MyText className="text-lg">Size</MyText>
+              <MyText className="text-lg">Tamano</MyText>
               <MyText className="text-gray-600">{params.size}</MyText>
             </View>
           </View>
@@ -267,14 +274,14 @@ export default function DetailsScreen() {
 
         {/* Nueva sección para mostrar las builds anteriores */}
         <View className="mt-4">
-          <MyText className="text-2xl font-bold mb-3">Previous Builds</MyText>
+          <MyText className="text-2xl font-bold mb-3">Builds Anteriores</MyText>
 
           {/* Buscador de builds */}
           <View className="flex-row items-center mb-4 bg-[#ececec] dark:bg-[#242424] rounded-lg px-3 py-2">
             <FontAwesome name="search" size={16} color={textColor} />
             <TextInput
               className="flex-1 ml-2 text-base"
-              placeholder="Search by build number or version..."
+              placeholder="Buscar por numero de build o version..."
               placeholderTextColor="#888"
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -283,7 +290,7 @@ export default function DetailsScreen() {
           </View>
 
           {loading ? (
-            <MyText className="text-center py-4">Loading builds...</MyText>
+            <MyText className="text-center py-4">Cargando builds...</MyText>
           ) : filteredBuilds.length > 0 ? (
             <View className="space-y-4">
               {filteredBuilds.map((build) => (
@@ -321,7 +328,7 @@ export default function DetailsScreen() {
                               : Colors.dark.text,
                         }}
                       >
-                        {build.state === "installed" ? "Installed" : "Install"}
+                        {build.state === "installed" ? "Instalada" : "Instalar"}
                       </MyText>
                     </TouchableOpacity>
                   </View>
@@ -341,8 +348,8 @@ export default function DetailsScreen() {
           ) : (
             <MyText className="text-center py-4 text-gray-500">
               {searchQuery
-                ? "No matching builds found"
-                : "No previous builds available"}
+                ? "No se encontraron builds"
+                : "No hay builds disponibles"}
             </MyText>
           )}
         </View>

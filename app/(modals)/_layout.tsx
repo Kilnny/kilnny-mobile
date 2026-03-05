@@ -8,6 +8,7 @@ export default function ModalsLayout() {
         headerShown: true,
         presentation: "modal",
         headerShadowVisible: false,
+        statusBarTranslucent: true,
         animation: Platform.OS === 'ios' ? 'default' : 'none',
       }}
     />

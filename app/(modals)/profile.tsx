@@ -7,7 +7,6 @@ import { Stack, router } from 'expo-router';
 import { useAuth } from '@/context/auth.context';
 import { View, Alert } from 'react-native';
 import { FontAwesome, EvilIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileModal() {
   const colorScheme = useColorScheme();
@@ -22,7 +21,7 @@ export default function ProfileModal() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
+    <View style={{ flex: 1, backgroundColor: bgColor }}>
       <Stack.Screen
         options={{
           title: 'Mi Perfil',
@@ -89,7 +88,7 @@ export default function ProfileModal() {
           <MyText style={[styles.logoutText, { color: '#ff3b30' }]}>Cerrar Sesión</MyText>
         </TouchableOpacity>
       </MyView>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   BackHandler,
@@ -105,7 +104,7 @@ export default function FeedbackModal() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: colorScheme === "dark" ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: colorScheme === "dark" ? "#000" : "#fff" }}>
         <Stack.Screen
           options={{
             title: "Feedback",
@@ -175,7 +174,7 @@ export default function FeedbackModal() {
             </TouchableOpacity>
           </MyView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      </View>
     </TouchableWithoutFeedback>
   );
 }

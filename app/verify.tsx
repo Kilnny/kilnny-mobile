@@ -77,7 +77,7 @@ export default function VerifyScreen() {
   const handleResend = async () => {
     setIsResending(true);
     try {
-      await apiClient.post('/auth/resend-verification', { email });
+      await apiClient.post('/auth/resend-verification', { email, source: 'mobile' });
       Alert.alert('Enviado', 'Se ha enviado un nuevo codigo a tu correo.');
       setCode(Array(CODE_LENGTH).fill(''));
       inputRefs.current[0]?.focus();

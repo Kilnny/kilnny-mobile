@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (email: string, name: string, password: string) => {
     try {
-      const data = await apiClient.post('/auth/register', { email, name, password });
+      const data = await apiClient.post('/auth/register', { email, name, password, source: 'mobile' });
 
       await Promise.all([
         AsyncStorage.setItem('@auth_token', data.access_token),
