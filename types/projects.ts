@@ -11,10 +11,14 @@ export interface Build {
   projectId: string;
   buildNumber: number;
   filePath: string;
+  packageName?: string;
   releaseNotes?: string;
   whatToTest?: string;
   size?: string;
   state: BuildState;
+  buildStatus?: string;
+  statusMessage?: string;
+  errorMessage?: string;
   releaseDate: Date | string;
   createdAt?: Date | string;
   updatedAt?: Date | string;

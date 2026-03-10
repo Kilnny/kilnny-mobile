@@ -33,7 +33,32 @@
       "Bash(1:*)",
       "Bash(node -e \":*)",
       "Bash(npx expo install expo-localization)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(node -e \"const m = require\\(''./dist/utils/apk_package.js''\\); console.log\\(Object.keys\\(m\\)\\);\")",
+      "Bash(node -e \"const { extractPackageName } = require\\(''./dist/utils/apk_package''\\); console.log\\(''Result:'', extractPackageName\\(''d:/Projects/apkfly/test-apkfly/dummy-release.apk''\\)\\);\")",
+      "Bash(node --eval \"const m = require\\(''./dist/utils/apk_package''\\); console.log\\(typeof m.extractPackageName, JSON.stringify\\(Object.keys\\(m\\)\\)\\);\")",
+      "Bash(node --input-type=commonjs -e 'const m = require\\(\"\"./dist/utils/apk_package\"\"\\); console.log\\(typeof m.extractPackageName, JSON.stringify\\(Object.keys\\(m\\)\\)\\);')",
+      "Bash(node --input-type=module -e 'import { extractPackageName } from \"\"./dist/utils/apk_package.js\"\"; console.log\\(\"\"Result:\"\", extractPackageName\\(\"\"d:/Projects/apkfly/test-apkfly/dummy-release.apk\"\"\\)\\);')",
+      "Bash(node ../cli/dist/index.js push)",
+      "Bash(python -c \"import zipfile; z=zipfile.ZipFile\\(''dummy-release.apk''\\); print\\([n for n in z.namelist\\(\\) if ''Manifest'' in n or ''manifest'' in n]\\)\")",
+      "Bash(npx expo prebuild --clean --platform android)",
+      "Bash(npx expo-modules-autolinking resolve)",
+      "Bash(npx expo-modules-autolinking resolve --platform android)",
+      "Bash(npx expo run:android)",
+      "Bash(adb logcat -d -t 100 -s \"ReactNativeJS\")",
+      "Bash(adb logcat -d -t 200 \"*:E\")",
+      "Bash(rm -rf node_modules/.cache)",
+      "Bash(rm -rf /tmp/metro-*)",
+      "Bash(rm -rf \"$TMPDIR/metro-*\")",
+      "Bash(xxd -l 16 \"d:/Projects/apkfly/test-apkfly/dummy-release.apk\")",
+      "Bash(xxd -l 4 \"d:/Projects/apkfly/test-apkfly/dummy-release.apk\")",
+      "Bash(adb logcat -d -s PackageChecker)",
+      "Bash(adb shell pm list packages)",
+      "Bash(adb shell am start -a android.intent.action.DELETE -d \"package:com.glez.dev.testapkfly\")",
+      "Bash(adb shell am start -a android.intent.action.UNINSTALL_PACKAGE -d \"package:com.glez.dev.testapkfly\")",
+      "Bash(adb logcat -d -t 200)",
+      "Bash(ls \"d:/Projects/apkfly/apkfly-client/app/\\(tabs\\)/\")",
+      "Bash(cat -n \"d:/Projects/apkfly/apkfly-client/app/\\(tabs\\)/index.tsx\")"
     ]
   }
 }

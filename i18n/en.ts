@@ -1,7 +1,7 @@
 export const en = {
   // Welcome
   welcome: {
-    title: "Welcome to ApkFly",
+    title: "Welcome to Kilnny",
     description: "The ideal platform for Android app distribution and testing. Like TestFlight but for Android.",
     getStarted: "Get Started",
   },
@@ -48,6 +48,7 @@ export const en = {
     noBuilds: "No builds available",
     install: "Install",
     installed: "Installed",
+    open: "Open",
     invitationCode: "Invitation Code",
     invitationDesc: "Enter the code you received to join a project.",
     invitationAccepted: "Invitation accepted",
@@ -56,12 +57,18 @@ export const en = {
     cancel: "Cancel",
     accept: "Accept",
     placeholder: "Ex: A1B2C3",
+    pinned: "Pinned",
+    pinLimit: "You can only pin up to 3 projects",
   },
 
   // Detail
   detail: {
     update: "Update",
     install: "Install",
+    open: "Open",
+    uninstall: "Uninstall",
+    uninstallConfirm: "Are you sure you want to uninstall this app?",
+    uninstallTitle: "Uninstall App",
     sendFeedback: "Send Feedback",
     whatToTest: "What to test?",
     description: "Description",
@@ -76,6 +83,7 @@ export const en = {
     noBuildsFound: "No builds found",
     noBuildsAvailable: "No builds available",
     noBuildError: "This project has no builds available",
+    openNotAvailable: "Cannot open app — package name not available",
   },
 
   // Feedback
@@ -102,6 +110,8 @@ export const en = {
     logout: "Log Out",
     comingSoon: "Coming Soon",
     comingSoonDesc: "This feature will be available soon.",
+    appVersion: "App Version",
+    account: "Account",
   },
 
   // Common

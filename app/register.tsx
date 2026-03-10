@@ -62,7 +62,7 @@ export default function RegisterScreen() {
             source={require('../assets/images/icon.png')}
             style={styles.logo}
           />
-          <MyText style={styles.title}>ApkFly</MyText>
+          <MyText style={styles.title}>Kilnny</MyText>
           <MyText style={styles.subtitle}>{t.auth.createAccount}</MyText>
         </View>
 

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "apkfly-client",
-    "slug": "apkfly-client",
-    "scheme": "apkfly-client",
+    "name": "kilnny",
+    "slug": "kilnny",
+    "scheme": "kilnny",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,41 +10,43 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#d1d5db"
+      "backgroundColor": "#23272C"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.glez.dev.apkflyclient"
+      "bundleIdentifier": "com.glez.dev.kilnny"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundColor": "#ffffff"
+        "backgroundImage": "./assets/images/android-icon-background.png"
       },
       "permissions": [
         "INTERNET",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
-        "REQUEST_INSTALL_PACKAGES"
+        "REQUEST_INSTALL_PACKAGES",
+        "QUERY_ALL_PACKAGES"
       ],
-      "package": "com.glez.dev.apkflyclient"
+      "package": "com.glez.dev.kilnny"
     },
     "plugins": [
       "expo-router",
       "expo-build-properties",
       "expo-font",
       "expo-web-browser",
-      "expo-localization"
+      "expo-localization",
+      "./plugins/withPackageVisibility"
     ],
     "extra": {
       "router": {
         "origin": false
       },
       "eas": {
-        "projectId": "bdd808b4-1ea9-4bf1-a143-df141b6afc6f"
+        "projectId": "f4913b53-287f-400f-b81a-86a3ae6df8a1"
       }
     }
   }

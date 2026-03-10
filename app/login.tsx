@@ -60,7 +60,7 @@ export default function LoginScreen() {
             source={require('../assets/images/icon.png')}
             style={styles.logo}
           />
-          <MyText style={styles.title}>ApkFly</MyText>
+          <MyText style={styles.title}>Kilnny</MyText>
           <MyText style={styles.subtitle}>{t.auth.loginTitle}</MyText>
         </View>
 

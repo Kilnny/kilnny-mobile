@@ -2,7 +2,7 @@ import type { Translations } from "./en";
 
 export const es: Translations = {
   welcome: {
-    title: "Bienvenido a ApkFly",
+    title: "Bienvenido a Kilnny",
     description: "La plataforma ideal para distribucion y testeo de aplicaciones Android. Similar a TestFlight pero para Android.",
     getStarted: "Comenzar",
   },
@@ -46,6 +46,7 @@ export const es: Translations = {
     noBuilds: "Sin builds disponibles",
     install: "Instalar",
     installed: "Instalado",
+    open: "Abrir",
     invitationCode: "Codigo de invitacion",
     invitationDesc: "Ingresa el codigo que recibiste para unirte a un proyecto.",
     invitationAccepted: "Invitacion aceptada",
@@ -54,11 +55,17 @@ export const es: Translations = {
     cancel: "Cancelar",
     accept: "Aceptar",
     placeholder: "Ej: A1B2C3",
+    pinned: "Fijados",
+    pinLimit: "Solo puedes fijar hasta 3 proyectos",
   },
 
   detail: {
     update: "Actualizar",
     install: "Instalar",
+    open: "Abrir",
+    uninstall: "Desinstalar",
+    uninstallConfirm: "¿Estas seguro de que quieres desinstalar esta app?",
+    uninstallTitle: "Desinstalar App",
     sendFeedback: "Enviar Feedback",
     whatToTest: "Que probar?",
     description: "Descripcion",
@@ -73,6 +80,7 @@ export const es: Translations = {
     noBuildsFound: "No se encontraron builds",
     noBuildsAvailable: "No hay builds disponibles",
     noBuildError: "Este proyecto no tiene builds disponibles",
+    openNotAvailable: "No se puede abrir la app — nombre de paquete no disponible",
   },
 
   feedback: {
@@ -97,6 +105,8 @@ export const es: Translations = {
     logout: "Cerrar Sesion",
     comingSoon: "Proximamente",
     comingSoonDesc: "Esta funcionalidad estara disponible pronto.",
+    appVersion: "Version de la app",
+    account: "Cuenta",
   },
 
   common: {

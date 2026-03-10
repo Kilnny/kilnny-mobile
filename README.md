@@ -1,4 +1,4 @@
-# APKFLY Android Client
+# Kilnny Android Client
 
 Este proyecto es el cliente de una aplicación similar a TestFlight, pero para dispositivos Android. Permite a los usuarios subir y distribuir APKs, así como instalar aplicaciones de orígenes desconocidos, especialmente aquellas subidas por el usuario o su equipo de desarrollo.
 
@@ -32,7 +32,7 @@ Asegúrate de tener instalados los siguientes programas en tu sistema:
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/Apkfly/apkfly-client.git
+   git clone https://github.com/Kilnny/kilnny-client.git
    cd testflight-android-client
    ```
 

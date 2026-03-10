@@ -10,10 +10,13 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from "@/components/useColorScheme";
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "@/context/auth.context";
+import { SocketProvider } from "@/context/socket.context";
+import { ToastProvider } from "@/context/toast.context";
 
 export const unstable_settings = {
   initialRouteName: "welcome",
@@ -49,22 +52,28 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider
-        value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      >
-        <AuthProvider>
-          <StatusBar style="auto" translucent />
-          <Stack screenOptions={{ statusBarTranslucent: true }}>
-            <Stack.Screen name="welcome" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-            <Stack.Screen name="register" options={{ headerShown: false }} />
-            <Stack.Screen name="verify" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(modals)" options={{ headerShown: false }} />
-          </Stack>
-        </AuthProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <AuthProvider>
+            <SocketProvider>
+              <ToastProvider>
+                <StatusBar style="auto" translucent backgroundColor="transparent" />
+                <Stack screenOptions={{ statusBarTranslucent: true, headerShown: false }}>
+                  <Stack.Screen name="welcome" />
+                  <Stack.Screen name="login" />
+                  <Stack.Screen name="register" />
+                  <Stack.Screen name="verify" />
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen name="(modals)" />
+                </Stack>
+              </ToastProvider>
+            </SocketProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
