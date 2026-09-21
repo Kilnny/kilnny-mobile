@@ -7,6 +7,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  picture?: string;
 }
 
 interface AuthState {
@@ -20,6 +21,9 @@ interface AuthState {
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, name: string, password: string) => Promise<void>;
+  completeRegistration: () => Promise<void>;
+  updateUser: (updates: Partial<Pick<User, 'name' | 'picture'>>) => Promise<User>;
+  uploadUserPicture: (file: { uri: string; name: string; type: string }) => Promise<User>;
   logout: () => Promise<void>;
   refreshUserSession: () => Promise<boolean>;
 }
@@ -101,7 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ]);
 
       setState({
-        isAuthenticated: true,
+        isAuthenticated: false,
         user: data.user,
         token: data.access_token,
         refreshToken: data.refresh_token,
@@ -113,6 +117,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Register error:', error);
       throw error;
     }
+  };
+
+  const completeRegistration = async () => {
+    try {
+      const [token, refreshToken, userString] = await Promise.all([
+        AsyncStorage.getItem('@auth_token'),
+        AsyncStorage.getItem('@refresh_token'),
+        AsyncStorage.getItem('@auth_user')
+      ]);
+
+      if (token && refreshToken && userString) {
+        const user = JSON.parse(userString);
+        setState({
+          isAuthenticated: true,
+          user,
+          token,
+          refreshToken,
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      console.error('Error completing registration:', error);
+    }
+  };
+
+  const updateUser = async (updates: Partial<Pick<User, 'name' | 'picture'>>) => {
+    if (!state.user) {
+      throw new Error('No hay una sesión activa');
+    }
+
+    const updatedUser = await apiClient.put(`/users/${state.user.id}`, updates);
+    await AsyncStorage.setItem('@auth_user', JSON.stringify(updatedUser));
+    setState(prev => ({ ...prev, user: updatedUser }));
+    return updatedUser;
+  };
+
+  const uploadUserPicture = async (file: { uri: string; name: string; type: string }) => {
+    if (!state.user) {
+      throw new Error('No hay una sesión activa');
+    }
+
+    const updatedUser = await apiClient.upload(`/users/${state.user.id}/picture`, file);
+    await AsyncStorage.setItem('@auth_user', JSON.stringify(updatedUser));
+    setState(prev => ({ ...prev, user: updatedUser }));
+    return updatedUser;
   };
 
   const refreshUserSession = async () => {
@@ -180,6 +229,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...state,
         login,
         register,
+        completeRegistration,
+        updateUser,
+        uploadUserPicture,
         logout,
         refreshUserSession
       }}

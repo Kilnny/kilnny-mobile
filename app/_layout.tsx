@@ -20,7 +20,7 @@ import { ToastProvider } from "@/context/toast.context";
 
 export const unstable_settings = {
   initialRouteName: "welcome",
-  modals: ["(modals)/feedback", "(modals)/profile"],
+  modals: ["(modals)/feedback", "(modals)/profile", "(modals)/workspace"],
 };
 
 SplashScreen.preventAutoHideAsync();

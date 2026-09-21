@@ -26,6 +26,7 @@ const MAX_PINS = 3;
 export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [redeemVisible, setRedeemVisible] = useState(false);
   const [redeemCode, setRedeemCode] = useState('');
@@ -41,7 +42,7 @@ export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const colors = Colors[colorScheme ?? 'light'];
-  const avatarBg = isDark ? '#2a3a30' : '#e8f5ee';
+  const avatarBg = colors.accentSoft;
   const initial = user?.name?.charAt(0).toUpperCase() || '?';
 
   useEffect(() => {
@@ -166,6 +167,7 @@ export default function ProjectsScreen() {
       const projectsData = await apiClient.get("/projects", { timeout: 20000 });
       if (projectsData && Array.isArray(projectsData)) {
         setProjects(projectsData);
+        setLoadError(false);
       }
     } catch {}
   };
@@ -179,11 +181,14 @@ export default function ProjectsScreen() {
 
       if (projectsData && Array.isArray(projectsData)) {
         setProjects(projectsData);
+        setLoadError(false);
       } else {
         console.warn("Unexpected format:", projectsData);
+        setLoadError(true);
       }
     } catch (error) {
       console.error("Request error:", error);
+      setLoadError(true);
     } finally {
       setIsLoading(false);
       setRefreshing(false);
@@ -224,10 +229,10 @@ export default function ProjectsScreen() {
         id: project.id,
         name: project.name,
         description: project.description,
-        picture: project.picture || "https://via.placeholder.com/100",
+        picture: project.picture || "",
         version: project.latestBuild?.version || "N/A",
         developer: project.developer || "-",
-        state: project.latestBuild?.state || "notInstalled",
+        state: project.latestBuild?.state || BuildState.NOT_INSTALLED,
         releaseDate:
           typeof project.latestBuild?.releaseDate === "string"
             ? project.latestBuild?.releaseDate
@@ -286,7 +291,7 @@ export default function ProjectsScreen() {
       >
         <TouchableOpacity
           style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: StyleSheet.hairlineWidth }}
-          className="rounded-xl mx-3 my-1.5 overflow-hidden"
+          className="rounded-lg mx-3 my-1.5 overflow-hidden"
           onPress={() => navigateToProjectDetail(project)}
           activeOpacity={0.7}
         >
@@ -378,7 +383,7 @@ export default function ProjectsScreen() {
             style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: avatarBg, alignItems: 'center', justifyContent: 'center' }}
             onPress={() => router.push("/(modals)/profile")}
           >
-            <Text style={{ color: '#1dc27d', fontWeight: 'bold', fontSize: 14 }}>{initial}</Text>
+            <Text style={{ color: colors.accent, fontWeight: 'bold', fontSize: 14 }}>{initial}</Text>
           </Pressable>
         </View>
       </View>
@@ -419,8 +424,15 @@ export default function ProjectsScreen() {
         }
         ListEmptyComponent={
           !isLoading ? (
-            <MyView className="items-center justify-center py-10">
-              <MyText className="text-gray-500">{t.projects.noProjects}</MyText>
+            <MyView className="items-center justify-center py-10 px-6">
+              <MyText className="text-gray-500 text-center">
+                {loadError ? t.projects.loadError : t.projects.noProjects}
+              </MyText>
+              {loadError && (
+                <TouchableOpacity className="mt-4 bg-[#1dc27d] rounded-md px-5 py-2" onPress={fetchProjects}>
+                  <MyText className="text-white font-semibold">{t.projects.retry}</MyText>
+                </TouchableOpacity>
+              )}
             </MyView>
           ) : null
         }

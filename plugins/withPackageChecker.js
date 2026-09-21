@@ -23,6 +23,33 @@ class PackageCheckerModule(reactContext: ReactApplicationContext) :
             promise.resolve(false)
         }
     }
+
+    @ReactMethod
+    fun launchApp(packageName: String, promise: Promise) {
+        try {
+            val intent = reactApplicationContext.packageManager.getLaunchIntentForPackage(packageName)
+            if (intent != null) {
+                reactApplicationContext.startActivity(intent)
+                promise.resolve(true)
+            } else {
+                promise.resolve(false)
+            }
+        } catch (e: Exception) {
+            promise.resolve(false)
+        }
+    }
+
+    @ReactMethod
+    fun uninstallApp(packageName: String, promise: Promise) {
+        try {
+            val intent = android.content.Intent(android.content.Intent.ACTION_DELETE, android.net.Uri.parse("package:$packageName"))
+            intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+            reactApplicationContext.startActivity(intent)
+            promise.resolve(true)
+        } catch (e: Exception) {
+            promise.resolve(false)
+        }
+    }
 }
 `;
 
@@ -67,12 +94,18 @@ function withPackageCheckerRegistration(config) {
   return withMainApplication(config, (config) => {
     let contents = config.modResults.contents;
 
-    // Add import if not present
     if (!contents.includes("PackageCheckerPackage")) {
-      // Register in getPackages()
+      const importLine = "import com.glez.dev.kilnny.PackageCheckerPackage";
+      if (!contents.includes(importLine)) {
+        contents = contents.replace(
+          /(^import .+\n)/m,
+          `$1${importLine}\n`
+        );
+      }
+
       contents = contents.replace(
-        "// packages.add(MyReactNativePackage())",
-        "packages.add(PackageCheckerPackage())"
+        /PackageList\(this\)\.packages\.apply\s*\{([^}]*)\}/m,
+        `PackageList(this).packages.apply {\n          add(PackageCheckerPackage())$1}`
       );
     }
 

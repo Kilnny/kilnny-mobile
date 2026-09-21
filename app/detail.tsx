@@ -366,7 +366,7 @@ export default function DetailsScreen() {
         <FontAwesome name="arrow-left" size={20} color={textColor} />
       </TouchableOpacity>
       <MyView style={styles.header}>
-        {params.picture && params.picture !== 'https://via.placeholder.com/100' ? (
+        {params.picture ? (
           <Image source={{ uri: params.picture }} style={styles.appIcon} />
         ) : (
           <View style={[styles.appIcon, { backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' }]}>

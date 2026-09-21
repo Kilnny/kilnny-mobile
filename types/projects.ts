@@ -2,7 +2,7 @@
 export enum BuildState {
   INSTALLED = 'installed',
   HAS_UPDATE = 'hasUpdate',
-  NOT_INSTALLED = 'notInstalled',
+  NOT_INSTALLED = 'noInstalled',
 }
 
 export interface Build {

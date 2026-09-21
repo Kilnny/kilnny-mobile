@@ -15,6 +15,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { apiClient } from '@/config/axios.config';
+import { useAuth } from '@/context/auth.context';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { t } from '@/i18n';
 
@@ -28,6 +29,7 @@ export default function VerifyScreen() {
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const colorScheme = useColorScheme();
   const router = useRouter();
+  const { completeRegistration } = useAuth();
 
   const textColor = colorScheme ? Colors[colorScheme].text : Colors.light.text;
   const backgroundColor = colorScheme ? Colors[colorScheme].background : Colors.light.background;
@@ -65,6 +67,7 @@ export default function VerifyScreen() {
     setIsVerifying(true);
     try {
       await apiClient.post('/auth/verify-code', { email, code: fullCode });
+      await completeRegistration();
       Alert.alert(t.verify.verified, t.verify.verifiedDesc, [
         { text: t.verify.continue, onPress: () => router.replace('/(tabs)') },
       ]);
@@ -89,7 +92,8 @@ export default function VerifyScreen() {
     }
   };
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await completeRegistration();
     router.replace('/(tabs)');
   };
 

@@ -129,4 +129,12 @@ export const apiClient = {
     
   patch: (url: string, data?: any, config?: AxiosRequestConfig) => 
     axiosInstance.patch(url, data, config).then(response => response.data),
+
+  upload: (url: string, file: { uri: string; name: string; type: string }, field = 'file') => {
+    const formData = new FormData();
+    formData.append(field, file as unknown as Blob);
+    return axiosInstance.put(url, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }).then(response => response.data);
+  },
 };

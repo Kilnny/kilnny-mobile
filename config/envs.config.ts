@@ -1,6 +1,5 @@
-import { Platform } from 'react-native';
+const productionApiUrl = 'https://kilnny-server.onrender.com/api';
+const productionWsUrl = 'https://kilnny-server.onrender.com';
 
-// Android emulator uses 10.0.2.2 to reach host machine's localhost
-const HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
-export const API_URL = `http://${HOST}:3000/api`;
-export const WS_URL = `http://${HOST}:3000`;
+export const API_URL = process.env.EXPO_PUBLIC_API_URL || productionApiUrl;
+export const WS_URL = process.env.EXPO_PUBLIC_WS_URL || productionWsUrl;
